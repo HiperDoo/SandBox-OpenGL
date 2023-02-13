@@ -1,0 +1,16 @@
+# <<<===== Cargador de Proyectos =====>>>
+
+if [ "$1" == "setup" ]; then
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release
+elif [ "$1" == "build" ]; then
+    (cd build/; make -j4)
+elif [ "$1" == "run" ]; then
+    (cd Release/; ./Release.app)
+else
+    echo "Error '$1': solo se reconocen tres posibles inputs..."
+    echo " > ./exe setup"
+    echo " > ./exe build"
+    echo " > ./exe run"
+fi
