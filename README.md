@@ -65,7 +65,7 @@ color=fedcba
 
 **Librerías/Dependencias**
 * **[GLFW](https://github.com/glfw/glfw)** - `3.3.8` Creación de ventanas y comunicación con las funciones de OpenGL.
-* **[GLEW](ttps://sourceforge.net/projects/glew/)** - `2.1` Cargador y administrador de las extensiones de OpenGL que mejor se adapten al equipo a ejecutar.
+* **[GLEW](https://sourceforge.net/projects/glew/)** - `2.1` Cargador y administrador de las extensiones de OpenGL que mejor se adapten al equipo a ejecutar.
 * **[GLM](https://github.com/g-truc/glm)** - `0.9.9` Conjunto de funciones matemáticas basadas en las especificaciones del lenguaje de Shaders (GLSL).
 * **[STB_IMAGE](https://github.com/nothings/stb/blob/master/stb_image.h)** - `2.27` Cargador de imágenes (único archivo .h).
 * **[FMT](https://github.com/fmtlib/fmt)** - `9.1.0` Alternativa más eficiente que `std::cout` y `printf()`.
