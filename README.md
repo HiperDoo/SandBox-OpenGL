@@ -26,15 +26,12 @@
 
 <!--
 =====> CUERPO <=====
-
-color=fedcba
 -->
 
 ---
 ![Download](https://img.shields.io/badge/Descargar%20x64-0.0.1-%234ea94b.svg?style=for-the-badge)
-![Windows](https://img.shields.io/badge/-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.svg/88px-Windows_logo_-_2012.svg.png" width="25">
-<img src="https://raw.githubusercontent.com/wiki/ryanoasis/nerd-fonts/screenshots/v1.0.x/linux-pass-sm.png" width="25">
+<img src="https://github.com/HiperDoo/media/blob/main/icons/w10.png" width="28">
+<img src="https://github.com/HiperDoo/media/blob/main/icons/linux.png" width="28">
 <br>
 
 ## 🌟 Motivación
