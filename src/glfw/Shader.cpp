@@ -15,7 +15,7 @@ GLint Shader::compileShader(const char* file_path, GLenum type) {
     if (!result) {
         GLchar InfoLog[256];
         glGetShaderInfoLog(shader_id, sizeof(InfoLog), NULL, InfoLog);
-        printf("%s\n", InfoLog); // TODO: limpiar e incorporar mensaje en el Log-Sys
+        printf("%s", InfoLog); // TODO: limpiar e incorporar mensaje en el Log-Sys
         glDeleteShader(shader_id);
         cmd::console_print(cmd::opengl, cmd::error,
             "Falla al compilar shader (archivo: '{}').", file_path);

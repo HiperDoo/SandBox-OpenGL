@@ -2,7 +2,6 @@
 #define APP_HPP
 
 #include "Renderer.hpp"
-#include "Model.hpp"
 #include "Mesh.hpp"
 
 #include "File_Loader.hpp"

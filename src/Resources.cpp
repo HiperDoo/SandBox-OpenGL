@@ -162,6 +162,7 @@ void initResources() {
 
     light.u_camera = light.shader.getUniformLocation("u_Camera");
     light.u_model = light.shader.getUniformLocation("u_Model");
+    light.u_lightColor = light.shader.getUniformLocation("u_LightColor");
 
 
     // Inicializacion de todas las texturas (obtenidas de sus respectivos archivos)

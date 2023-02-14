@@ -9,10 +9,13 @@ io::File_Buffer<16 * ONE_KB> shader_buff;
 
 int main(void) {
     std::ios_base::sync_with_stdio(false);
+    
+    int error_code{EXIT_FAILURE};
 
     try {
         init_GLFW();
         run_program();
+        //TODO: Posiblemente aqui
     } catch (const std::system_error& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
@@ -30,6 +33,11 @@ int main(void) {
     }
 
     shut_down();
+
+    // TODO: Mostrar este mensaje cuando se cierre la aplicacion de forma erronea
+    cmd::console_print(cmd::server, cmd::info,
+        "Presione Enter para salir...");
+    getchar();
 
     return EXIT_SUCCESS;
 }

@@ -3,7 +3,7 @@
 namespace io {
     template <int T>
     void File_Buffer<T>::load_from_file(const char* file_path) {
-        std::ifstream file(file_path);
+        std::ifstream file(file_path, std::ifstream::binary);
         if (!file.is_open()) {
             auto error = std::system_error(errno, std::system_category());
             cmd::console_print(cmd::server, cmd::error,
