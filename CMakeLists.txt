@@ -36,7 +36,7 @@ ELSEIF (WIN32)
     SET(RELEASE "Release")
     SET(LIB_FLAGS glfw glew_s)
 ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 -static -static-libgcc -static-libstdc++")
 
 # Obtencion recursiva de archivos .cpp y .h del proyecto
 FILE(GLOB_RECURSE SRC_FILES "src/*.cpp")
