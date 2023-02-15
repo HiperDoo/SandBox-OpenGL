@@ -29,16 +29,17 @@ PROJECT("SandBox" VERSION 0.1.0)
 
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(RELEASE "Release.app")
-SET(DEBUG "Debug.app") #Detectar cuando se compila en modo Debug
+IF (UNIX AND NOT APPLE)
+    SET(RELEASE "Release.app")
+    SET(LIB_FLAGS GL glfw glew_s)
+ELSEIF (WIN32)
+    SET(RELEASE "Release")
+    SET(LIB_FLAGS glfw glew_s)
+ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2")
-SET(LIB_FLAGS GL glfw glew_s)
-
 
 # Obtencion recursiva de archivos .cpp y .h del proyecto
-FILE(GLOB_RECURSE SRC_FILES
-    "src/*.cpp"
-)
+FILE(GLOB_RECURSE SRC_FILES "src/*.cpp")
 HEADERS(HEADER_FILES "include/*.hpp")
 
 ADD_EXECUTABLE(${RELEASE} ${SRC_FILES})
@@ -50,6 +51,7 @@ INCLUDE_DIRECTORIES(external)
 ADD_SUBDIRECTORY("external/glfw")
 ADD_SUBDIRECTORY("external/glm")
 ADD_SUBDIRECTORY("external/glew/build/cmake")
+ADD_SUBDIRECTORY("external/fmt")
 
 # Especificacion de a direccion de los archivos de encabezado
 TARGET_INCLUDE_DIRECTORIES(${RELEASE}
@@ -60,12 +62,7 @@ TARGET_INCLUDE_DIRECTORIES(${RELEASE}
     PUBLIC "external/stb"
     PUBLIC "external/json"
 )
-
-TARGET_LINK_DIRECTORIES(${RELEASE}
-    PRIVATE "external/glfw/src"
-)
-
-find_package(fmt)
+TARGET_LINK_DIRECTORIES(${RELEASE} PRIVATE "external/glfw/src")
 
 TARGET_LINK_LIBRARIES(${RELEASE} ${LIB_FLAGS} fmt::fmt)
 

@@ -37,7 +37,7 @@ if "%input%" == "download" (
 ) else if "%input%" == "setup" (
     mkdir "%~dp0\build"
     cd build
-    start cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+    call cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 ) else if "%input%" == "build" (
     cd build
     call mingw32-make -j4
