@@ -102,8 +102,9 @@
 
 <br>
 
+<!-- REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1 -->
 ## 🔨 Compilación Linux y Windows
-Abra una nueva terminal (o CMD en el caso de Windows), vaya a la carpeta raíz de este proyecto (/SandBox-OpenGL) y ejecute los siguientes comandos:
+ Vaya a la carpeta raíz de este proyecto (/SandBox-OpenGL) y abra una nueva Terminal/CMD para ejecutar los siguientes comandos (o simplemente haga doble-click sobre `sh.bat`:
 ```bash
 # Instalación de dependencias (en caso de no funcionar, instalarlos
 # de forma manual mediante los links previamente proporcionados).
