@@ -23,7 +23,8 @@ exit 0
 
 :WINDOWS
 @echo off
-cls
+
+set "rootdir=%CD%"
 
 if "%1" == "" (
     set flag=1==1
@@ -34,9 +35,29 @@ if "%1" == "" (
 )
 
 if "%input%" == "setup" (
-    mkdir "%~dp0\build"
+    if exist "%rootdir%\dep\glfw" ( cd %rootdir%\dep\glfw
+    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
+    mkdir build 2>nul
     cd build
-    call cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
+    call mingw32-make -j4
+    echo ===== GLFW CONFIGURADO =====
+
+    if exist "%rootdir%\dep\glew" ( cd %rootdir%\dep\glfw
+    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
+    mkdir build 2>nul
+    cd build
+    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
+    call mingw32-make -j4
+    echo ===== GLEW CONFIGURADO =====
+
+    if exist "%rootdir%\dep\fmt" ( cd %rootdir%\dep\glfw
+    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
+    mkdir build 2>nul
+    cd build
+    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
+    call mingw32-make -j4
+    echo ===== FMT CONFIGURADO =====
 ) else if "%input%" == "build" (
     cd build
     call mingw32-make -j4

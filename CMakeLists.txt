@@ -31,8 +31,8 @@ SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 SET(LIB_FLAGS
-    ${CMAKE_SOURCE_DIR}/dep/glew/build/lib/libGLEW.a
     ${CMAKE_SOURCE_DIR}/dep/glfw/build/src/libglfw3.a
+    ${CMAKE_SOURCE_DIR}/dep/glew/build/lib/libGLEW.a
     ${CMAKE_SOURCE_DIR}/dep/fmt/build/libfmt.a
 )
 IF (UNIX AND NOT APPLE)
