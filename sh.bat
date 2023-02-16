@@ -1,8 +1,6 @@
 echo >/dev/null # >nul & GOTO WINDOWS & rem ^
 
-if [ "$1" == "download" ]; then
-    echo ""
-elif [ "$1" == "setup" ]; then
+if [ "$1" == "setup" ]; then
     (cd dep/glfw/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
     (cd dep/glew/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
     (cd dep/fmt/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
@@ -15,8 +13,7 @@ elif [ "$1" == "build" ]; then
 elif [ "$1" == "run" ]; then
     (cd Release/; ./Release.app)
 else
-    echo "Error '$1': solo se reconocen cuatro posibles inputs..."
-    echo " > ./sh.bat download"
+    echo "Error '$1': solo se reconocen tres posibles inputs..."
     echo " > ./sh.bat setup"
     echo " > ./sh.bat build"
     echo " > ./sh.bat run"
@@ -36,9 +33,7 @@ if "%1" == "" (
     set input=%1
 )
 
-if "%input%" == "download" (
-    echo A
-) else if "%input%" == "setup" (
+if "%input%" == "setup" (
     mkdir "%~dp0\build"
     cd build
     call cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
@@ -50,7 +45,7 @@ if "%input%" == "download" (
     call Release.exe
     exit
 ) else (
-    echo "Error '%input%': solo se reconocen cuatro posibles inputs (download, setup, build, run)..."
+    echo "Error '%input%': solo se reconocen tres posibles inputs (setup, build, run)..."
 )
 
 if %flag% (

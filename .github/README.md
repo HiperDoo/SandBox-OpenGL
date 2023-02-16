@@ -50,6 +50,12 @@
 📌 Esta clase de proyectos los considero como hobbies, por lo que tienen la **menor prioridad** sobre el tiempo de mi día, avanzo en esta clase de proyectos cuando tengo tiempo y ganas :p\
 
 > **Warning** - Este repositorio **NO** es un tutorial ni un estándar definitivo, pero cualquier tipo de duda es bien recibida.
+
+<br>
+
+## 📷 Capturas y Videos
+* **TODO** - Agregar media en esta sección (todo se guardará en el directorio .github).
+
 <br>
 
 ## 🧰 Requisitos y Dependencias
@@ -57,23 +63,30 @@
 * **TODO** - Cosas de hardware
 
 **Aplicaciones/Paquetes**
-* **[CMake](https://www.maketecheasier.com/install-cmake-in-linux/)** - `3.25.2` Administrador para la compilación.
-* **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código C/C++.
+> Para Linux y Windows descargar...
+* **[CMake](https://cmake.org/download/)** - `3.25.2` Administrador para la compilación.
+* **[Git](https://git-scm.com/downloads)** - `3.39.1` Encargado de descargar este repositorio (se recomienda usar esto ya que descargar y acomodar las librerías de forma automática).
+> Para Linux descargar...
+* **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código **C/C++**.
+* **[Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)** - `4.4` Para compilar las librerías de forma estática (mayor portabilidad y velocidad en el ejecutable final).
+> Para Windows descargar...
+* **[MinGW]()** - `0.0.0` Compilador de código **C/C++** y también **mingw32-make** (lo mismo que **make**).
 
 **Librerías/Dependencias**
-* **[GLFW](https://github.com/glfw/glfw)** - `3.3.8` Creación de ventanas y comunicación con las funciones de OpenGL.
-* **[GLEW](https://sourceforge.net/projects/glew/)** - `2.1` Cargador y administrador de las extensiones de OpenGL que mejor se adapten al equipo a ejecutar.
-* **[GLM](https://github.com/g-truc/glm)** - `0.9.9` Conjunto de funciones matemáticas basadas en las especificaciones del lenguaje de Shaders (GLSL).
+* **[GLFW](https://github.com/glfw/glfw)** - `3.3.8` Creación de ventanas y comunicación con las funciones de **OpenGL**.
+* **[GLEW](https://github.com/Perlmint/glew-cmake/)** - `2.1` Cargador y administrador de las extensiones de **OpenGL** que mejor se adapten al equipo a ejecutar.
+* **[GLM](https://github.com/g-truc/glm)** - `0.9.9` Conjunto de funciones matemáticas basadas en las especificaciones del lenguaje de Shaders (**GLSL**).
 * **[STB_IMAGE](https://github.com/nothings/stb/blob/master/stb_image.h)** - `2.27` Cargador de imágenes (único archivo .h).
-* **[FMT](https://github.com/fmtlib/fmt)** - `9.1.0` Alternativa más eficiente que `std::cout` y `printf()`.
+* **[FMT](https://github.com/fmtlib/fmt)** - `9.1.0` Alternativa más eficiente que **std::cout** y **printf()**.
 
 <details>
 <summary>Árbol de dependencias:</summary>
 
-> Para que las dependencias (librerías) sean visibles por CMake, es necesario ordenarlas dentro de la carpeta `/SandBox-OpenGL/external` de la siguiente manera:
+> Para que las dependencias (librerías) sean visibles por CMake, es necesario ordenarlas dentro de la carpeta `/SandBox-OpenGL/dep` de la siguiente manera:
 > ```
 > $ SandBox-OpenGL
-> ├── external
+> ├── .github
+> ├── dep
 > │   ├── fmt
 > |   |   ├── include/*.h
 > |   |   ├── src/*.cc
@@ -96,6 +109,9 @@
 > ├── include
 > ├── Release
 > ├── src
+> ├── .gitignore
+> ├── .gitmodules
+> ├── CMakeLists.txt
 > └── README.md
 > ```
 </details>
@@ -106,10 +122,6 @@
 ## 🔨 Compilación Linux y Windows
  Vaya a la carpeta raíz de este proyecto (/SandBox-OpenGL) y abra una nueva Terminal/CMD para ejecutar los siguientes comandos (o simplemente haga doble-click sobre `sh.bat`:
 ```bash
-# Instalación de dependencias (en caso de no funcionar, instalarlos
-# de forma manual mediante los links previamente proporcionados).
-./sh.bat download
-
 # Construir proyecto (ejecutar una única vez):
 ./sh.bat setup
 
@@ -119,3 +131,15 @@
 # Ejecución del programa:
 ./sh.bat run
 ```
+<br>
+
+## 💣 ¿Algún error?
+> Aquí hay una lista de algunos de los posibles errores con soluciones que podrías llegar a enfrentarte (si tienes algún error o problema, recuerda que puedes ir a **[Issues](https://github.com/HiperDoo/SandBox-OpenGL/issues)** y describir la situación en la que te encuentras para poder ayudarte)
+
+* A
+* B
+* C
+
+<br>
+
+## 📜 TODO
