@@ -1,7 +1,8 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
-#include <glew/include/GL/glew.h>
+//#include <glew/include/GL/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>

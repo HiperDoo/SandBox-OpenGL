@@ -11,14 +11,14 @@ FUNCTION(HEADERS return search)
     ENDFOREACH()
     LIST(REMOVE_DUPLICATES dir_list)
     SET(${return} ${dir_list})
-    set(${return} ${${return}} PARENT_SCOPE)
+    SET(${return} ${${return}} PARENT_SCOPE)
 ENDFUNCTION()
 
-#GLFW Configs
-set(OpenGL_GL_PREFERENCE LEGACY)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+# GLFW - Configs
+SET(OpenGL_GL_PREFERENCE LEGACY)
+SET(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+SET(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+SET(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 
 # =============================================
@@ -29,14 +29,22 @@ PROJECT("SandBox" VERSION 0.1.0)
 
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+SET(LIB_FLAGS
+    ${CMAKE_SOURCE_DIR}/dep/glew/build/lib/libGLEW.a
+    ${CMAKE_SOURCE_DIR}/dep/glfw/build/src/libglfw3.a
+    ${CMAKE_SOURCE_DIR}/dep/fmt/build/libfmt.a
+)
 IF (UNIX AND NOT APPLE)
     SET(RELEASE "Release.app")
-    SET(LIB_FLAGS GL glfw glew_s)
+    SET(LIB_FLAGS ${LIB_FLAGS} GL)
 ELSEIF (WIN32)
     SET(RELEASE "Release")
-    SET(LIB_FLAGS glfw glew_s)
 ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 -static -static-libgcc -static-libstdc++")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+    -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
+    -DGLEW_STATIC -static-libgcc -static-libstdc++"
+) # -static
 
 # Obtencion recursiva de archivos .cpp y .h del proyecto
 FILE(GLOB_RECURSE SRC_FILES "src/*.cpp")
@@ -46,24 +54,27 @@ ADD_EXECUTABLE(${RELEASE} ${SRC_FILES})
 # Especificacion de la direccion de generacion del ejecutable
 SET_TARGET_PROPERTIES(${RELEASE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Release")
 
-INCLUDE_DIRECTORIES(external)
 # Porque esto hace que la ejecucion del .app sea mas veloz?
-ADD_SUBDIRECTORY("external/glfw")
-ADD_SUBDIRECTORY("external/glm")
-ADD_SUBDIRECTORY("external/glew/build/cmake")
-ADD_SUBDIRECTORY("external/fmt")
+INCLUDE_DIRECTORIES(dep)
+ADD_SUBDIRECTORY(dep/glfw)
+ADD_SUBDIRECTORY(dep/glew/build/cmake)
+ADD_SUBDIRECTORY(dep/glew)
+ADD_SUBDIRECTORY(dep/glm)
+ADD_SUBDIRECTORY(dep/fmt)
 
 # Especificacion de a direccion de los archivos de encabezado
 TARGET_INCLUDE_DIRECTORIES(${RELEASE}
     PUBLIC ${HEADER_FILES}
-    PUBLIC "external/glfw/include"
-    PUBLIC "external/glm"
-    PUBLIC "external/glew/include"
-    PUBLIC "external/stb"
-    PUBLIC "external/json"
-)
-TARGET_LINK_DIRECTORIES(${RELEASE} PRIVATE "external/glfw/src")
+    PUBLIC "dep/glfw/include"
+    PUBLIC "dep/glm"
+    PUBLIC "dep/glew/include"
+    PUBLIC "dep/stb"
+    PUBLIC "dep/json"
 
-TARGET_LINK_LIBRARIES(${RELEASE} ${LIB_FLAGS} fmt::fmt)
+    PUBLIC "dep/fmt/include"
+)
+TARGET_LINK_DIRECTORIES(${RELEASE} PRIVATE "dep/glfw/src")
+
+TARGET_LINK_LIBRARIES(${RELEASE} PRIVATE ${LIB_FLAGS})
 
 ADD_DEFINITIONS(${FLAGS})

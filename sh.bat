@@ -3,6 +3,10 @@ echo >/dev/null # >nul & GOTO WINDOWS & rem ^
 if [ "$1" == "download" ]; then
     echo ""
 elif [ "$1" == "setup" ]; then
+    (cd dep/glfw/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
+    (cd dep/glew/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
+    (cd dep/fmt/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
+
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release

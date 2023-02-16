@@ -1,0 +1,15 @@
+[submodule "dep/glfw"]
+	path = dep/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "dep/glm"]
+	path = dep/glm
+	url = https://github.com/g-truc/glm
+[submodule "dep/glew"]
+	path = dep/glew
+	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "dep/fmt"]
+	path = dep/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "dep/stb"]
+	path = dep/stb
+	url = https://github.com/nothings/stb.git
