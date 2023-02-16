@@ -82,7 +82,7 @@
 <details>
 <summary>Árbol de dependencias:</summary>
 
-> Para que las dependencias (librerías) sean visibles por CMake, es necesario ordenarlas dentro de la carpeta `/SandBox-OpenGL/dep` de la siguiente manera:
+> Para que las dependencias (librerías) sean visibles por CMake, es necesario ordenarlas dentro de la carpeta `/SandBox-OpenGL/dep` de la siguiente manera (solamente en caso de **NO** haberse usado `Git`, sino una instalación y descarga completamente manual):
 > ```
 > $ SandBox-OpenGL
 > ├── .github
