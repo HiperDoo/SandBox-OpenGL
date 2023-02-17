@@ -64,20 +64,24 @@
 * Compilación de librerías de forma estática (tanto para Linux como para Windows).
 * Máxima simplificación de pasos requeridos para compilar el proyecto en dos simples comandos.
 #### 🔶 Programa
-* sd
+* Cubemap (simulación de entorno tridimensional).
+* Cargador de modelos 3D (formato de archivo personal). {Mucho por mejorar}
+* **TODO** - Características sobresalientes en proceso de desarrollo...
 
 <br>
 
 ## 📜 TODO
-* A
-* B
-* C
+* **TODO** - Agregar lista de cosas por hacer...
 
 <br>
 
 ## 🧰 Requisitos y Dependencias
-**🔩 Compatibilidad del sistema**
-* **TODO** - Cosas de hardware
+**🔩 Compatibilidad del Sistema**
+* **OS** - Linux/Windows (no ha sido probado en las diferentes distribuciones de Linux que existen, pero no hay razón por la que no sea posible ejecutar el programa).
+* **CPU** - De `64 bits`.
+* **GPU** - Con soporte para OpenGL `4.5` o superior.
+* **RAM** - `250MB` (ni se para que especifico esto xd).
+* **VRAM** - `200MB` (otro dato que no es de preocuparse).
 
 **📦 Aplicaciones/Paquetes**
 > Para Linux y Windows descargar...
@@ -87,6 +91,7 @@
 * **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código **C/C++**.
 * **[Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)** - `4.4` Para compilar las librerías de forma estática (mayor portabilidad y velocidad en el ejecutable final).
 > Para Windows descargar...
+<!--Agregar link-->
 * **[MinGW]()** - `0.0.0` Compilador de código **C/C++** y también **mingw32-make** (lo mismo que **make**).
 
 **📚 Librerías/Dependencias**
@@ -151,8 +156,5 @@
 <br>
 
 ## 💣 ¿Algún error?
-> Aquí hay una lista de algunos de los posibles errores con soluciones que podrías llegar a enfrentarte (si tienes algún error o problema, recuerda que puedes ir a **[Issues](https://github.com/HiperDoo/SandBox-OpenGL/issues)** y describir la situación en la que te encuentras para poder ayudarte)
-
-* A
-* B
-* C
+> Aquí hay una lista de algunos de los posibles errores con soluciones que podrías llegar a enfrentarte (si tienes algún error o problema, recuerda que puedes ir a **[Issues](https://github.com/HiperDoo/SandBox-OpenGL/issues)** y describir la situación en la que te encuentras para poder ayudarte).
+* **TODO** - Agregar lista de posibles errores y sus soluciones...
