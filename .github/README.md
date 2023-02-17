@@ -10,9 +10,9 @@
 
 [![](https://dcbadge.vercel.app/api/server/VA5ENPXWPJ)](https://discord.gg/VA5ENPXWPJ)
 
-[![](https://img.shields.io/github/release/HiperDoo/SandBox-OpenGL?style=for-the-badge&logo=Github&color=blue)](https://github.com/HiperDoo/SandBox-OpenGL/releases)
+[![](https://img.shields.io/github/issues/HiperDoo/SandBox-OpenGL?style=for-the-badge&logo=Github&color=yellow)](https://github.com/HiperDoo/SandBox-OpenGL/releases)
 [![](https://img.shields.io/github/last-commit/HiperDoo/SandBox-OpenGL?style=for-the-badge&logo=Github&color=19A1CA)](https://github.com/HiperDoo/SandBox-OpenGL)
-[![](https://img.shields.io/github/stars/HiperDoo/SandBox-OpenGL?style=for-the-badge&logo=Github&color=yellow)](https://github.com/HiperDoo/SandBox-OpenGL/stargazers)
+[![](https://img.shields.io/github/repo-size/HiperDoo/SandBox-OpenGL?style=for-the-badge&logo=Github&color=green)](https://github.com/HiperDoo/SandBox-OpenGL/stargazers)
     <br><br><p>Desarrollado con:</p>
 
 ![C++17](https://img.shields.io/badge/C++17-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
