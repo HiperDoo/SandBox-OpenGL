@@ -19,7 +19,7 @@
 ![Terminal](https://img.shields.io/badge/GCC%2012.2.1-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white)
 ![CMake](https://img.shields.io/badge/CMake%203.25.2-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white)
 
-![OpenGL](https://img.shields.io/badge/OpenGL%203.3-%23FFFFFF.svg?style=for-the-badge&logo=opengl)
+![OpenGL](https://img.shields.io/badge/OpenGL%204.5-%23FFFFFF.svg?style=for-the-badge&logo=opengl)
 ![Arch](https://img.shields.io/badge/Arch%20Linux-1793D1?logo=arch-linux&logoColor=fff&style=for-the-badge)
 <!--![Windows](https://img.shields.io/badge/Windows%2010-0078D6?style=for-the-badge&logo=windows&logoColor=white)-->
 </div>

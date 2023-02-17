@@ -1,6 +1,10 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#define OPENGL_VERSION "4.5"
+#define OPENGL_VERSION_MAJOR 4
+#define OPENGL_VERSION_MINOR 5
+
 #include "Renderer.hpp"
 #include "Mesh.hpp"
 
@@ -28,8 +32,8 @@ void init_GLFW() {
         throw EXIT_FAILURE;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(screen_width, screen_height, "Hello World", nullptr, nullptr);
@@ -49,12 +53,23 @@ void init_GLFW() {
         throw EXIT_FAILURE;
     }
 
-    //glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    glfwSetErrorCallback(ErrorCallback);
+    // TODO: No funciona como deberia
+    const char* version = (const char*)glGetString(GL_VERSION);
+    if (!strstr(version, OPENGL_VERSION)) {
+        cmd::console_print(cmd::opengl, cmd::error,
+            "La extencion DSA no esta disponible en esta computadora.");
+        // TODO: Mejorar el sistema de mensajes (en este caso, mensajes largos)
+        printf("> Se requiere de 'OpenGL %s', pero esta computadora tiene la version %s\n",
+            OPENGL_VERSION, version);
+        throw EXIT_FAILURE;
+    }
 
     cmd::console_print(cmd::opengl, cmd::info, "Version de Render: {}", (const char*)glGetString(GL_RENDERER));
-    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", (const char*)glGetString(GL_VERSION));
+    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", version);
     cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    //glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+    glfwSetErrorCallback(ErrorCallback);
 
     glViewport(0, 0, screen_width, screen_height);
 }

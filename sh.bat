@@ -23,6 +23,7 @@ exit 0
 
 :WINDOWS
 @echo off
+cls
 
 set "rootdir=%CD%"
 
