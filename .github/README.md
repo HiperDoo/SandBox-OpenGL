@@ -76,6 +76,8 @@
 <br>
 
 ## 🧰 Requisitos y Dependencias
+> **Note** - La sección de `Aplicaciones/Paquetes` y `Librerías/Dependencias` sólo son importantes si se desea compilar el proyecto.
+
 **🔩 Compatibilidad del Sistema**
 * **OS** - Linux/Windows 10 (no ha sido probado en las diferentes distribuciones de Linux que existen, pero no hay razón por la que no sea posible ejecutar el programa).
 * **CPU** - De `64 bits`.
@@ -91,8 +93,7 @@
 * **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código **C/C++**.
 * **[Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)** - `4.4` Para compilar las librerías de forma estática (mayor portabilidad y velocidad en el ejecutable final).
 > Para Windows descargar...
-<!--Agregar link-->
-* **[MinGW]()** - `0.0.0` Compilador de código **C/C++** y también **mingw32-make** (lo mismo que **make**).
+* **[MinGW](https://github.com/niXman/mingw-builds-binaries/releases)** - `12.2.0` Compilador de código **C/C++** y también **mingw32-make** (lo mismo que **make**).
 
 **📚 Librerías/Dependencias**
 * **[GLFW](https://github.com/glfw/glfw)** - `3.3.8` Creación de ventanas y comunicación con las funciones de **OpenGL**.
