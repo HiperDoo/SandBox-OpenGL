@@ -20,12 +20,13 @@
 }*/
 
 void ErrorCallback(int, const char* err_str) {
-    cmd::console_print(cmd::opengl, cmd::error,
-        err_str);
+    cmd::console_print(cmd::opengl, cmd::error, err_str);
     throw EXIT_FAILURE;
 }
 
 void init_GLFW() {
+    glfwSetErrorCallback(ErrorCallback);
+
     if (!glfwInit()) {
         cmd::console_print(cmd::opengl, cmd::error,
             "No se ha logrado inicializar GLFW.");
@@ -69,7 +70,6 @@ void init_GLFW() {
     cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     //glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    glfwSetErrorCallback(ErrorCallback);
 
     glViewport(0, 0, screen_width, screen_height);
 }
