@@ -30,7 +30,7 @@ PROJECT("SandBox" VERSION 0.1.0)
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-SET(LIB_FLAGS opengl32 glew_s
+SET(LIB_FLAGS glew_s
     ${CMAKE_SOURCE_DIR}/dep/glfw/build/src/libglfw3.a
     ${CMAKE_SOURCE_DIR}/dep/glew/build/lib/libGLEW.a
     ${CMAKE_SOURCE_DIR}/dep/fmt/build/libfmt.a
@@ -40,9 +40,10 @@ IF (UNIX AND NOT APPLE)
     SET(LIB_FLAGS ${LIB_FLAGS} GL)
 ELSEIF (WIN32)
     SET(RELEASE "Release")
+    SET(LIB_FLAGS ${LIB_FLAGS} opengl32)
 ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
+    -std=c++17 -O3 -s -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
     -DGLEW_STATIC -static-libgcc -static-libstdc++"
 ) # -static
 

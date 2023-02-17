@@ -21,7 +21,6 @@
 
 ![OpenGL](https://img.shields.io/badge/OpenGL%204.5-%23FFFFFF.svg?style=for-the-badge&logo=opengl)
 ![Arch](https://img.shields.io/badge/Arch%20Linux-1793D1?logo=arch-linux&logoColor=fff&style=for-the-badge)
-<!--![Windows](https://img.shields.io/badge/Windows%2010-0078D6?style=for-the-badge&logo=windows&logoColor=white)-->
 </div>
 
 <!--
@@ -58,6 +57,24 @@
 
 <br>
 
+## 🏅 Características
+#### 🔶 Código
+* Limpieza y legibilidad del código
+* Minimizar los alojamientos de memoria reciclando buffers y llevando la lógica del código en un modelo predictivo.
+* Compilación de librerías de forma estática (tanto para Linux como para Windows).
+* Máxima simplificación de pasos requeridos para compilar el proyecto en dos simples comandos.
+#### 🔶 Programa
+* sd
+
+<br>
+
+## 📜 TODO
+* A
+* B
+* C
+
+<br>
+
 ## 🧰 Requisitos y Dependencias
 **🔩 Compatibilidad del sistema**
 * **TODO** - Cosas de hardware
@@ -65,7 +82,7 @@
 **📦 Aplicaciones/Paquetes**
 > Para Linux y Windows descargar...
 * **[CMake](https://cmake.org/download/)** - `3.25.2` Administrador para la compilación.
-* **[Git](https://git-scm.com/downloads)** - `3.39.1` Encargado de descargar este repositorio (se recomienda usar esto ya que descargar y acomodar las librerías de forma automática).
+* **[Git](https://git-scm.com/downloads)** - `3.39.1` Encargado de descargar este repositorio (se recomienda usar esto ya que descarga y acomodar las librerías de forma automática).
 > Para Linux descargar...
 * **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código **C/C++**.
 * **[Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)** - `4.4` Para compilar las librerías de forma estática (mayor portabilidad y velocidad en el ejecutable final).
@@ -136,13 +153,6 @@
 ## 💣 ¿Algún error?
 > Aquí hay una lista de algunos de los posibles errores con soluciones que podrías llegar a enfrentarte (si tienes algún error o problema, recuerda que puedes ir a **[Issues](https://github.com/HiperDoo/SandBox-OpenGL/issues)** y describir la situación en la que te encuentras para poder ayudarte)
 
-* A
-* B
-* C
-
-<br>
-
-## 📜 TODO
 * A
 * B
 * C
