@@ -59,7 +59,7 @@
 
 ## 🏅 Características
 #### 🔶 Código
-* Limpieza y legibilidad del código
+* Limpieza y legibilidad del código.
 * Minimizar los alojamientos de memoria reciclando buffers y llevando la lógica del código en un modelo predictivo.
 * Compilación de librerías de forma estática (tanto para Linux como para Windows).
 * Máxima simplificación de pasos requeridos para compilar el proyecto en dos simples comandos.
@@ -77,7 +77,7 @@
 
 ## 🧰 Requisitos y Dependencias
 **🔩 Compatibilidad del Sistema**
-* **OS** - Linux/Windows (no ha sido probado en las diferentes distribuciones de Linux que existen, pero no hay razón por la que no sea posible ejecutar el programa).
+* **OS** - Linux/Windows 10 (no ha sido probado en las diferentes distribuciones de Linux que existen, pero no hay razón por la que no sea posible ejecutar el programa).
 * **CPU** - De `64 bits`.
 * **GPU** - Con soporte para OpenGL `4.5` o superior.
 * **RAM** - `250MB` (ni se para que especifico esto xd).
