@@ -41,23 +41,29 @@ if "%input%" == "setup" (
     cd build
     call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
     call mingw32-make -j4
+    echo ============================
     echo ===== GLFW CONFIGURADO =====
+    echo ============================
 
-    if exist "%rootdir%\dep\glew" ( cd %rootdir%\dep\glfw
-    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
+    if exist "%rootdir%\dep\glew" ( cd %rootdir%\dep\glew
+    ) else ( echo El directorio `%rootdir%\dep\glew` no existe. )
     mkdir build 2>nul
     cd build
     call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
     call mingw32-make -j4
+    echo ============================
     echo ===== GLEW CONFIGURADO =====
+    echo ============================
 
-    if exist "%rootdir%\dep\fmt" ( cd %rootdir%\dep\glfw
-    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
+    if exist "%rootdir%\dep\fmt" ( cd %rootdir%\dep\fmt
+    ) else ( echo El directorio `%rootdir%\dep\fmt` no existe. )
     mkdir build 2>nul
     cd build
     call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
     call mingw32-make -j4
+    echo ===========================
     echo ===== FMT CONFIGURADO =====
+    echo ===========================
 ) else if "%input%" == "build" (
     cd build
     call mingw32-make -j4
