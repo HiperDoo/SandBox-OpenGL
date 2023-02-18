@@ -25,6 +25,15 @@ void ErrorCallback(int, const char* err_str) {
 }
 
 void init_GLFW() {
+    #ifdef _WIN32
+    #include <windows.h>
+    extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+    extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+    #else
+    char env[] = "DRI_PRIME=1";
+    putenv(env);
+    #endif
+
     glfwSetErrorCallback(ErrorCallback);
 
     if (!glfwInit()) {

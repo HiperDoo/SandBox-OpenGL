@@ -1,12 +1,5 @@
 #include "App.hpp"
 
-#ifdef _WIN32
-#include <windows.h>
-// TODO: arreglar problema al tener dos gpus
-extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
-#endif
-
 GLFWwindow* window{nullptr};
 int screen_width{720};
 int screen_height{480};
