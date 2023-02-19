@@ -1,7 +1,6 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#define OPENGL_VERSION "4.5"
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 5
 
@@ -10,30 +9,141 @@
 
 #include "File_Loader.hpp"
 
+void get_cpu_info() {
+    const uint32_t SSE_POS   = 0x02000000;
+    const uint32_t SSE2_POS  = 0x04000000;
+    const uint32_t SSE3_POS  = 0x00000001;
+    const uint32_t SSE41_POS = 0x00080000;
+    const uint32_t SSE42_POS = 0x00100000;
+    const uint32_t AVX_POS   = 0x10000000;
+    const uint32_t AVX2_POS  = 0x00000020;
+    const uint32_t LVL_TYPE  = 0x0000FF00;
+    const uint32_t LVL_CORES = 0x0000FFFF;
+
+    char* vendor_id = new char[16];
+    char* model_name = new char[48];
+    int mNumSMT{0}, cores{0}, threads{0};
+    bool HTT{false}, SSE{false}, SSE2{false}, SSE3{false},
+        SSE41{false}, SSE42{false}, AVX{false}, AVX2{false};
+
+    uint32_t EAX, EBX, ECX, EDX;
+
+    auto CPUID = [&EAX, &EBX, &ECX, &EDX](int funcId, int subFuncId) {
+        #ifdef _WIN32
+            __cpuidex(regs, funcId, subFuncId);
+        #else
+            asm volatile
+                ("cpuid" : "=a" (EAX), "=b" (EBX), "=c" (ECX), "=d" (EDX)
+                : "a" (funcId), "c" (subFuncId));
+        #endif
+    };
+
+    // Vendor ID
+    CPUID(0, 0);
+    *reinterpret_cast<uint32_t*>(vendor_id) = EBX;
+    *reinterpret_cast<uint32_t*>(vendor_id + 4) = EDX;
+    *reinterpret_cast<uint32_t*>(vendor_id + 8) = ECX;
+    vendor_id[12] = '\0';
+    uint32_t HFS = EAX;
+
+    // Obtener disponibilidad de Instrucciones SSE
+    CPUID(1, 0);
+    HTT   = EDX & AVX_POS;
+    SSE   = EDX & SSE_POS;
+    SSE2  = EDX & SSE2_POS;
+    SSE3  = ECX & SSE3_POS;
+    SSE41 = ECX & SSE41_POS;
+    SSE42 = ECX & SSE42_POS;
+    AVX   = ECX & AVX_POS;
+
+    // Obtener disponibilidad de Instrucciones AVX2
+    CPUID(7, 0);
+    AVX2 = EBX & AVX2_POS;
+
+    // Obtener numero de Nucleos e Hilos
+    for (int i = 0; i < 12; i++) vendor_id[i] = vendor_id[i] & ~32;
+    if (strstr(vendor_id, "INTEL")) {
+        if(HFS >= 11) {
+            for (int lvl = 0; lvl < 4; lvl++) {
+                CPUID(0x0B, lvl);
+                uint32_t currLevel = (LVL_TYPE & ECX) >> 8;
+                if (currLevel == 1) mNumSMT = LVL_CORES & EBX;
+                else if (currLevel == 2) threads = LVL_CORES & EBX;
+            }
+            cores = threads / mNumSMT;
+        } else {
+            if (HFS >= 1) {
+                threads = (EBX >> 16) & 0xFF;
+                if (HFS >= 4) {
+                    CPUID(4, 0);
+                    cores = (1 + (EAX >> 26)) & 0x3F;
+                }
+            }
+            if (HTT) {
+                if (!(cores > 1)) {
+                    cores = 1;
+                    threads = (threads >= 2 ? threads : 2);
+                }
+            } else {
+                cores = threads = 1;
+            }
+        }
+    } else if (strstr(vendor_id, "AMD")) {
+        if (HFS >= 1) {
+            threads = (EBX >> 16) & 0xFF;
+            CPUID(0x80000000, 0);
+            if (EAX >=8) {
+                CPUID(0x80000008, 0);
+                cores = 1 + (ECX & 0xFF);
+            }
+        }
+        if (HTT) {
+            if (!(cores>1)) {
+                cores = 1;
+                threads = (threads >= 2 ? threads : 2);
+            }
+        } else {
+            cores = threads = 1;
+        }
+    } else {
+        cores = threads = 0;
+    }
+
+    // Obtener nombre de CPU
+    for(int i = 0, j = 0; i < 3; i++, j = i << 4) {
+        CPUID(i + 0x80000002, 0);
+        *reinterpret_cast<uint32_t*>(model_name + j) = EAX;
+        *reinterpret_cast<uint32_t*>(model_name + j + 4) = EBX;
+        *reinterpret_cast<uint32_t*>(model_name + j + 8) = ECX;
+        *reinterpret_cast<uint32_t*>(model_name + j + 12) = EDX;
+    }
+    model_name[47] = '\0';
+
+    const char* cond[2] = { "No", "Si" };
+    printf("%s\n", model_name);
+    printf("| SSE:   %s | SSE2:  %s | SSE3: %s |\n", cond[SSE],   cond[SSE2], cond[SSE3]);
+    printf("| SSE41: %s | SSE42: %s |          |\n", cond[SSE41], cond[SSE42]);
+    printf("| AVX:   %s | AVX2:  %s |          |\n", cond[AVX],   cond[AVX2]);
+
+    delete[] vendor_id;
+    delete[] model_name;
+}
+
 /*void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     screen_width = width;
     screen_height = height;
-	glViewport(0, 0, screen_width, screen_height);
+    glViewport(0, 0, screen_width, screen_height);
     //float aspect = (float)screen_width / (float)screen_height;
     //glm::mat4 ortho = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
     //test_sha.setUniformMat4f(u_MVP, ortho);
 }*/
 
-void ErrorCallback(int, const char* err_str) {
+void ErrorCallback(int, const char *err_str) {
     cmd::console_print(cmd::opengl, cmd::error, err_str);
     throw EXIT_FAILURE;
 }
 
 void init_GLFW() {
-    #ifdef _WIN32
-    #include <windows.h>
-    extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-    extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
-    #else
-    char env[] = "DRI_PRIME=1";
-    putenv(env);
-    #endif
-
     glfwSetErrorCallback(ErrorCallback);
 
     if (!glfwInit()) {
@@ -55,7 +165,7 @@ void init_GLFW() {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); //60fps
+    glfwSwapInterval(1); // 60fps
 
     if (glewInit() != GLEW_OK) {
         cmd::console_print(cmd::opengl, cmd::error,
@@ -63,22 +173,20 @@ void init_GLFW() {
         throw EXIT_FAILURE;
     }
 
-    // TODO: No funciona como deberia
-    const char* version = (const char*)glGetString(GL_VERSION);
-    if (!strstr(version, OPENGL_VERSION)) {
-        cmd::console_print(cmd::opengl, cmd::error,
-            "La extencion DSA no esta disponible en esta computadora.");
-        // TODO: Mejorar el sistema de mensajes (en este caso, mensajes largos)
-        printf("> Se requiere de 'OpenGL %s', pero esta computadora tiene la version %s\n",
-            OPENGL_VERSION, version);
-        throw EXIT_FAILURE;
-    }
+    // TODO: Ordenar el sistema de impresion de hardware (y agregar mas modulos, como la RAM)
+    get_cpu_info();
 
-    cmd::console_print(cmd::opengl, cmd::info, "Version de Render: {}", (const char*)glGetString(GL_RENDERER));
-    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", version);
-    cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+    const char* versions[3] = {
+        (const char*)glGetString(GL_RENDERER),
+        (const char*)glGetString(GL_VERSION),
+        (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)
+    };
+    const char* undefined = "Indefinido...";
+    cmd::console_print(cmd::opengl, cmd::info, "Version de Render: {}", versions[0] ? versions[0] : undefined);
+    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", versions[1] ? versions[1] : undefined);
+    cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", versions[2] ? versions[2] : undefined);
 
-    //glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+    // glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     glViewport(0, 0, screen_width, screen_height);
 }
@@ -94,14 +202,14 @@ void run_program() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Enables the Depth Buffer
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-	// Enables Cull Facing
-	//glEnable(GL_CULL_FACE);
-	// Keeps front faces
-	//glCullFace(GL_FRONT);
-	// Uses counter clock-wise standard
-	//glFrontFace(GL_CCW);
+    // Enables Cull Facing
+    // glEnable(GL_CULL_FACE);
+    // Keeps front faces
+    // glCullFace(GL_FRONT);
+    // Uses counter clock-wise standard
+    // glFrontFace(GL_CCW);
 
     #define FRAME_RATE 1.0f / 60.0f
     float rotation{0.0f};
@@ -125,10 +233,10 @@ void run_program() {
         camera.updateMatrix();
 
         renderSkyBox();
-        //renderPiramid(rotation);
+        // renderPiramid(rotation);
         renderFloor();
         renderLight();
-        //renderCppImg();
+        // renderCppImg();
 
         mesh.render();
 
@@ -175,14 +283,14 @@ void shut_down() {
     GLint u_scale = shader_model.getUniformLocation("u_Scale");
 
     glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
+    glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::mat4 lightModel = glm::mat4(1.0f);
     lightModel = glm::translate(lightModel, lightPos);
 
     shader_model.setUniformVec4f(u_lightColor, lightColor);
     shader_model.setUniformVec3f(u_lightPos, lightPos);
     shader_model.setUniform1i(shader_model.getUniformLocation("u_Diffuse_0"), 0);
-	shader_model.setUniform1i(shader_model.getUniformLocation("u_Specular_0"), 1);*/
+    shader_model.setUniform1i(shader_model.getUniformLocation("u_Specular_0"), 1);*/
 
 /*shader_model.setUniformVec3f(u_cameraPos, camera.position);
         shader_model.setUniformMat4f(u_camera, camera.matrix);

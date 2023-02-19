@@ -1,5 +1,12 @@
 #include "App.hpp"
 
+// Si existe una GPU dedicada, usarla (Windows)
+#ifdef _WIN32
+#include <windows.h>
+extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+#endif
+
 GLFWwindow* window{nullptr};
 int screen_width{720};
 int screen_height{480};
@@ -10,26 +17,34 @@ io::File_Buffer<16 * ONE_KB> shader_buff;
 int main(void) {
     std::ios_base::sync_with_stdio(false);
     
+    // TODO: Mejorar el sistema de errores
     int error_code{EXIT_FAILURE};
 
     try {
+        // Si existe una GPU dedicada, usarla (Linux)
+        #ifndef _WIN32
+        char env[] = "DRI_PRIME=1";
+        putenv(env);
+        #endif
+
         init_GLFW();
         run_program();
+        error_code = EXIT_SUCCESS;
         //TODO: Posiblemente aqui
     } catch (const std::system_error& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
-        return EXIT_FAILURE;
+        error_code = EXIT_FAILURE;
     } catch (const std::exception& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
-        return EXIT_FAILURE;
+        error_code = EXIT_FAILURE;
     } catch (const int e) {
-        return e;
+        error_code = e;
     } catch (...) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error desconocido (posiblemente de un agente de 3ros)");
-        return EXIT_FAILURE;
+        error_code = EXIT_FAILURE;
     }
 
     shut_down();
@@ -39,5 +54,5 @@ int main(void) {
         "Presione Enter para salir...");
     getchar();
 
-    return EXIT_SUCCESS;
+    return error_code;
 }
