@@ -117,41 +117,34 @@ void Texture<T>::loadImagesCubeMap(const char** file_paths, const GLenum min_fil
 	const GLenum mag_filter, const GLenum filter) {
 	unsigned char* buffer{nullptr};
 	int width{0}, height{0}, BPP{0};
+	stbi_info(file_paths[0], &width, &height, &BPP);
 	
     glCreateTextures(T, 1, &program_id);
-	// TODO: USar ..Storage3D?
-	//glTextureStorage2D(program_id, 1, GL_RGB8, width, height);
-	glBindTexture(T, program_id);
+	glTextureStorage2D(program_id, 1, GL_RGB8, width, height);
 
 	stbi_set_flip_vertically_on_load(true);
 	for (int i = 0; i < 6; i++) {
-		buffer = stbi_load(file_paths[i], &width, &height, &BPP, 0);
+		int curr_width{0}, curr_height{0};
+		buffer = stbi_load(file_paths[i], &curr_width, &curr_height, &BPP, 0);
 		stbi_set_flip_vertically_on_load(false);
 		if (!buffer) {
 			cmd::console_print(cmd::server, cmd::error,
 				"Falla al abrir imagen (archivo: '{}').", file_paths[i]);
 			throw 1;
 		}
+		if (width != curr_width && height != curr_height) {
+			cmd::console_print(cmd::server, cmd::error,
+				"Todas los tamanos de las imagenes del CubeMap deben ser iguales.");
+			throw 1;
+		}
 
-		/*glTextureSubImage3D(
+		glTextureSubImage3D(
 			program_id,
-			0, 0, 0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+			0, 0, 0, i,
 			width, height, 1,
 			GL_RGB, GL_UNSIGNED_BYTE,
 			buffer
-		);*/
-		glTexImage2D(
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-			0,
-			GL_RGB,
-			width,
-			height,
-			0,
-			GL_RGB,
-			GL_UNSIGNED_BYTE,
-			buffer
 		);
-
 		stbi_image_free(buffer);
 	}
 
