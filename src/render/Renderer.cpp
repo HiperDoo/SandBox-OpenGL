@@ -20,7 +20,9 @@ void renderCppImg() {
     cpp_img.shader.setUniformMat4f(
         cpp_img.u_camera, camera.matrix
     );
+    glEnable(GL_BLEND);
     cpp_img.vertexObj.render();
+    glDisable(GL_BLEND);
 }
 
 void renderPiramid(const float rotation) {

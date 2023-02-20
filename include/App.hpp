@@ -116,6 +116,7 @@ void get_cpu_info() {
     model_name[47] = '\0';
 
     const char* cond[2] = { "No", "Si" };
+    printf("%s\n", model_name);
     printf("| SSE:   %s | SSE2:  %s | SSE3: %s |\n", cond[SSE],   cond[SSE2], cond[SSE3]);
     printf("| SSE41: %s | SSE42: %s |          |\n", cond[SSE41], cond[SSE42]);
     printf("| AVX:   %s | AVX2:  %s |          |\n", cond[AVX],   cond[AVX2]);
@@ -151,7 +152,9 @@ void init_GLFW() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(screen_width, screen_height, "Hello World", nullptr, nullptr);
+    window_name = new char[32];
+    strcpy(window_name, "SandBox OpenGL | fps: 60.0");
+    window = glfwCreateWindow(screen_width, screen_height, window_name, nullptr, nullptr);
     if (!window) {
         cmd::console_print(cmd::opengl, cmd::error,
             "No se ha logrado crear la ventana.");
@@ -194,35 +197,36 @@ void run_program() {
 
     // Activacion de la funcion Blend para asi renderizar
     // imagenes/texturas con transparencia.
-    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Enables the Depth Buffer
+    // Respetar la posicion de profundidad de cada objeto renderizado.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    // Enables Cull Facing
-    // glEnable(GL_CULL_FACE);
-    // Keeps front faces
-    // glCullFace(GL_FRONT);
-    // Uses counter clock-wise standard
-    // glFrontFace(GL_CCW);
-
-    #define FRAME_RATE 1.0f / 60.0f
-    float rotation{0.0f};
-    double currTime{0.0f};
-    double prevTime = glfwGetTime();
+    // Evitar renderizar triangulos que no apuntan a la camara.
+    // TODO: Direcciones de caras invertidas del modelo, reparar.
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 
     vertex_buff.destroyBuffer();
     shader_buff.destroyBuffer();
 
+    //#define FRAME_RATE 1.0f / 60.0f
+    //float rotation{0.0f};
+    double timeDiff{0.0f}, currTime{0.0f}, prevTime = glfwGetTime();
+    unsigned int counter{0};
+
     while (!glfwWindowShouldClose(window)) {
+        currTime = glfwGetTime(); counter++;
+        if ((timeDiff = currTime - prevTime) >= 1.0f) {
+            //rotation += 0.5f;
+            sprintf(window_name + 22, "%.1f", (1.0f / timeDiff) * counter);
+            glfwSetWindowTitle(window, window_name);
+
+            prevTime = currTime;
+            counter = 0;
+        }
+
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        currTime = glfwGetTime();
-        if (currTime - prevTime >= FRAME_RATE) {
-            rotation += 0.5f;
-            prevTime = currTime;
-        }
 
         camera.inputs();
         camera.updateMatrix();
@@ -233,7 +237,9 @@ void run_program() {
         renderLight();
         // renderCppImg();
 
+        glEnable(GL_CULL_FACE);
         mesh.render();
+        glDisable(GL_CULL_FACE);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -242,6 +248,7 @@ void run_program() {
 
 void shut_down() {
     glfwTerminate();
+    delete[] window_name;
 }
 
 #endif

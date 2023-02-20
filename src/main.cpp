@@ -8,6 +8,7 @@ extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x
 #endif
 
 GLFWwindow* window{nullptr};
+char* window_name{nullptr};
 int screen_width{720};
 int screen_height{480};
 

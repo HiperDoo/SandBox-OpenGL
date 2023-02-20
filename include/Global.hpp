@@ -18,6 +18,7 @@
 #include "File_Loader.hpp"
 
 extern GLFWwindow* window;
+extern char* window_name;
 extern int screen_width;
 extern int screen_height;
 
