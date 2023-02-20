@@ -18,33 +18,40 @@ int main(void) {
     std::ios_base::sync_with_stdio(false);
     
     // TODO: Mejorar el sistema de errores
-    int error_code{EXIT_FAILURE};
+    int exit_code{EXIT_FAILURE};
 
     try {
-        // Si existe una GPU dedicada, usarla (Linux)
         #ifndef _WIN32
-        char env[] = "DRI_PRIME=1";
-        putenv(env);
+        try {
+            // Si existe una GPU dedicada, usarla (Linux)
+            char env[] = "DRI_PRIME=1";
+            putenv(env);
+        } catch (...) {
+            cmd::console_print(cmd::server, cmd::error,
+                "Falla al elegir GPU dedicada del sistema (Error: DRI_PRIME=1).");
+        }
         #endif
 
         init_GLFW();
         run_program();
-        error_code = EXIT_SUCCESS;
-        //TODO: Posiblemente aqui
+        shut_down();
+        cmd::console_print(cmd::server, cmd::info,
+            "Programa finalizado de forma exitosa :>");
+        return EXIT_SUCCESS;
     } catch (const std::system_error& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
-        error_code = EXIT_FAILURE;
+        exit_code = EXIT_FAILURE;
     } catch (const std::exception& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
-        error_code = EXIT_FAILURE;
+        exit_code = EXIT_FAILURE;
     } catch (const int e) {
-        error_code = e;
+        exit_code = e;
     } catch (...) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error desconocido (posiblemente de un agente de 3ros)");
-        error_code = EXIT_FAILURE;
+        exit_code = EXIT_FAILURE;
     }
 
     shut_down();
@@ -54,5 +61,5 @@ int main(void) {
         "Presione Enter para salir...");
     getchar();
 
-    return error_code;
+    return exit_code;
 }

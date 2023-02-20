@@ -23,19 +23,15 @@ void get_cpu_info() {
     char* vendor_id = new char[16];
     char* model_name = new char[48];
     int mNumSMT{0}, cores{0}, threads{0};
-    bool HTT{false}, SSE{false}, SSE2{false}, SSE3{false},
+    bool HTT{false} , SSE{false}, SSE2{false}, SSE3{false},
         SSE41{false}, SSE42{false}, AVX{false}, AVX2{false};
 
     uint32_t EAX, EBX, ECX, EDX;
 
     auto CPUID = [&EAX, &EBX, &ECX, &EDX](int funcId, int subFuncId) {
-        #ifdef _WIN32
-            __cpuidex(regs, funcId, subFuncId);
-        #else
-            asm volatile
-                ("cpuid" : "=a" (EAX), "=b" (EBX), "=c" (ECX), "=d" (EDX)
-                : "a" (funcId), "c" (subFuncId));
-        #endif
+        asm volatile
+            ("cpuid" : "=a" (EAX), "=b" (EBX), "=c" (ECX), "=d" (EDX)
+            : "a" (funcId), "c" (subFuncId));
     };
 
     // Vendor ID
@@ -120,7 +116,6 @@ void get_cpu_info() {
     model_name[47] = '\0';
 
     const char* cond[2] = { "No", "Si" };
-    printf("%s\n", model_name);
     printf("| SSE:   %s | SSE2:  %s | SSE3: %s |\n", cond[SSE],   cond[SSE2], cond[SSE3]);
     printf("| SSE41: %s | SSE42: %s |          |\n", cond[SSE41], cond[SSE42]);
     printf("| AVX:   %s | AVX2:  %s |          |\n", cond[AVX],   cond[AVX2]);
