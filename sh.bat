@@ -65,6 +65,11 @@ if "%input%" == "setup" (
     echo ===========================
     echo ===== FMT CONFIGURADO =====
     echo ===========================
+
+    cd %rootdir%
+    mkdir build 2>nul
+    cd build
+    call cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 ) else if "%input%" == "build" (
     cd build
     call mingw32-make -j4

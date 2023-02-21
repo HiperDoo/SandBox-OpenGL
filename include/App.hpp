@@ -7,8 +7,6 @@
 #include "Renderer.hpp"
 #include "Mesh.hpp"
 
-#include "File_Loader.hpp"
-
 void get_cpu_info() {
     const uint32_t SSE_POS   = 0x02000000;
     const uint32_t SSE2_POS  = 0x04000000;
@@ -140,6 +138,7 @@ void ErrorCallback(int, const char *err_str) {
 }
 
 void init_GLFW() {
+    ms::Timer clock;
     glfwSetErrorCallback(ErrorCallback);
 
     if (!glfwInit()) {
@@ -187,6 +186,9 @@ void init_GLFW() {
     // glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     glViewport(0, 0, screen_width, screen_height);
+    clock.tock();
+    auto a = clock.duration().count();
+    printf("%lld ms | %.3f sec\n", a, a / 1000.0f);
 }
 
 void run_program() {
