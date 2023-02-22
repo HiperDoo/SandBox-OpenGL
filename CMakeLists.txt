@@ -55,7 +55,7 @@ SET_TARGET_PROPERTIES(${RELEASE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_
 
 ADD_COMPILE_DEFINITIONS(GLEW_STATIC)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
+    -std=c++17 -O3 -s -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
     -static-libgcc -static-libstdc++"
 )
 

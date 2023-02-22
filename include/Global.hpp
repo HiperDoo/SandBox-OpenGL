@@ -13,7 +13,6 @@
 #include <chrono>
 #include <exception>
 
-#include "Log.hpp"
 #include "Utilities.hpp"
 
 extern GLFWwindow* window;

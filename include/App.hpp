@@ -186,9 +186,8 @@ void init_GLFW() {
     // glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     glViewport(0, 0, screen_width, screen_height);
-    clock.tock();
-    auto a = clock.duration().count();
-    printf("%lld ms | %.3f sec\n", a, a / 1000.0f);
+    cmd::console_print(cmd::server, cmd::debug,
+        "CONFIGURACION Y CREACION DE VENTANA OPENGL ({} secs)", clock.tock().count() / 1000.0f);
 }
 
 void run_program() {

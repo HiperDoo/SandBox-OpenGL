@@ -36,7 +36,7 @@ int main(void) {
         init_GLFW();
         run_program();
         shut_down();
-        cmd::console_print(cmd::server, cmd::info,
+        cmd::console_print(cmd::server, cmd::debug,
             "Programa finalizado de forma exitosa :>");
         return EXIT_SUCCESS;
     } catch (const std::system_error& e) {
@@ -58,7 +58,7 @@ int main(void) {
     shut_down();
 
     // TODO: Mostrar este mensaje cuando se cierre la aplicacion de forma erronea
-    cmd::console_print(cmd::server, cmd::info,
+    cmd::console_print(cmd::server, cmd::debug,
         "Presione Enter para salir...");
     getchar();
 
