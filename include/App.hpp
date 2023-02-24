@@ -1,11 +1,17 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#define OPENGL_VERSION_MAJOR 4
-#define OPENGL_VERSION_MINOR 5
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/sysinfo.h>
+#endif
 
 #include "Renderer.hpp"
 #include "Mesh.hpp"
+
+#define OPENGL_VERSION_MAJOR 4
+#define OPENGL_VERSION_MINOR 5
 
 void get_cpu_info() {
     const uint32_t SSE_POS   = 0x02000000;
@@ -18,11 +24,23 @@ void get_cpu_info() {
     const uint32_t LVL_TYPE  = 0x0000FF00;
     const uint32_t LVL_CORES = 0x0000FFFF;
 
+    enum CPU_Flags {
+        SSE = 1,
+        SSE2 = 2,
+        SSE3 = 4,
+        SSE41 = 8,
+        SSE42 = 16,
+
+        AVX = 256,
+        AVX2 = 512
+    };
+    int cpu{0};
+
     char* vendor_id = new char[16];
     char* model_name = new char[48];
     int mNumSMT{0}, cores{0}, threads{0};
-    bool HTT{false} , SSE{false}, SSE2{false}, SSE3{false},
-        SSE41{false}, SSE42{false}, AVX{false}, AVX2{false};
+    bool HTT{false}; /*, SSE{false}, SSE2{false}, SSE3{false},
+        SSE41{false}, SSE42{false}, AVX{false}, AVX2{false};*/
 
     uint32_t EAX, EBX, ECX, EDX;
 
@@ -43,16 +61,23 @@ void get_cpu_info() {
     // Obtener disponibilidad de Instrucciones SSE
     CPUID(1, 0);
     HTT   = EDX & AVX_POS;
-    SSE   = EDX & SSE_POS;
+    cpu |= !!(EDX & SSE_POS) << 0
+        | !!(EDX & SSE2_POS) << 1
+        | !!(ECX & SSE3_POS) << 2
+        | !!(ECX & SSE41_POS) << 3
+        | !!(ECX & SSE42_POS) << 4
+        | !!(ECX & AVX_POS) << 8;
+    /*SSE   = EDX & SSE_POS;
     SSE2  = EDX & SSE2_POS;
     SSE3  = ECX & SSE3_POS;
     SSE41 = ECX & SSE41_POS;
     SSE42 = ECX & SSE42_POS;
-    AVX   = ECX & AVX_POS;
+    AVX   = ECX & AVX_POS;*/
 
     // Obtener disponibilidad de Instrucciones AVX2
     CPUID(7, 0);
-    AVX2 = EBX & AVX2_POS;
+    cpu |= !!(EBX & AVX2_POS) << 9;
+    //AVX2 = EBX & AVX2_POS;
 
     // Obtener numero de Nucleos e Hilos
     for (int i = 0; i < 12; i++) vendor_id[i] = vendor_id[i] & ~32;
@@ -113,11 +138,37 @@ void get_cpu_info() {
     }
     model_name[47] = '\0';
 
-    const char* cond[2] = { "No", "Si" };
-    printf("%s\n", model_name);
-    printf("| SSE:   %s | SSE2:  %s | SSE3: %s |\n", cond[SSE],   cond[SSE2], cond[SSE3]);
-    printf("| SSE41: %s | SSE42: %s |          |\n", cond[SSE41], cond[SSE42]);
-    printf("| AVX:   %s | AVX2:  %s |          |\n", cond[AVX],   cond[AVX2]);
+    auto print_component = [](int size, const char* type, const char* msg) {
+        fmt::print(
+            "┌{0:─^{2}}┐\n"
+            "│{1: ^{2}}│ {3}\n"
+            "└{0:─^{2}}┘\n",
+            "", type, size, msg
+        );
+    };
+
+    const char* inst[] = {
+        "none", "SSE", "SSE2", "SSE3", "SSE4.1", "SSE4.2",
+        "none", "AVX", "AVX2"
+    };
+    int pos1{0}, pos2{0};
+    asm ("bsrl %1, %0" : "=r" (pos1) : "b" ((char)cpu & 0xFF));
+    asm ("bsrl %1, %0" : "=r" (pos2) : "r" (cpu >> 8));
+    cmd::console_print(cmd::server, cmd::debug, "Hardware utilizado:");
+    fmt::print("   CPU: {} - [{} | {}]\n", model_name, inst[pos1 + 1], inst[pos2 + 7]);
+
+    double total_memory{0.0f};
+    #ifdef _WIN32
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    total_memory = status.ullTotalPhys;
+    #else
+    struct sysinfo info;
+    sysinfo(&info);
+    total_memory = info.totalram;
+    #endif
+    fmt::print("   RAM: {:.1f} GB\n", total_memory  / 1073741824.0f);
 
     delete[] vendor_id;
     delete[] model_name;

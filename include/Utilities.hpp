@@ -79,23 +79,26 @@ namespace cmd {
         };
         #endif
     };
+
     enum msg_side { server = 0, client, opengl };
     enum msg_type { info = 0, warn, error, debug };
 
     #define FMT_BUFFER_SIZE 128
     extern char fmt_buffer[FMT_BUFFER_SIZE];
 
-    #ifdef APPLY_COLORS
-    void printing(const msg_side arg1, const msg_type arg2);
-    #else
-    void printing(const msg_side arg1, const msg_type arg2);
-    #endif
+    namespace scope {
+        #ifdef APPLY_COLORS
+        void printing(const msg_side arg1, const msg_type arg2);
+        #else
+        void printing(const msg_side arg1, const msg_type arg2);
+        #endif
+    }
 
     template <class... Args>
     void console_print(const msg_side arg1, const msg_type arg2, Args... args) {
         auto [out, size] = fmt::format_to_n(fmt_buffer, FMT_BUFFER_SIZE - 1, args...);
         *out = '\0';
-        printing(arg1, arg2);
+        scope::printing(arg1, arg2);
     }
 };
 
