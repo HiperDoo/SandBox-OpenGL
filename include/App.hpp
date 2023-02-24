@@ -39,8 +39,7 @@ void get_cpu_info() {
     char* vendor_id = new char[16];
     char* model_name = new char[48];
     int mNumSMT{0}, cores{0}, threads{0};
-    bool HTT{false}; /*, SSE{false}, SSE2{false}, SSE3{false},
-        SSE41{false}, SSE42{false}, AVX{false}, AVX2{false};*/
+    bool HTT{false};
 
     uint32_t EAX, EBX, ECX, EDX;
 
@@ -67,17 +66,10 @@ void get_cpu_info() {
         | !!(ECX & SSE41_POS) << 3
         | !!(ECX & SSE42_POS) << 4
         | !!(ECX & AVX_POS) << 8;
-    /*SSE   = EDX & SSE_POS;
-    SSE2  = EDX & SSE2_POS;
-    SSE3  = ECX & SSE3_POS;
-    SSE41 = ECX & SSE41_POS;
-    SSE42 = ECX & SSE42_POS;
-    AVX   = ECX & AVX_POS;*/
 
     // Obtener disponibilidad de Instrucciones AVX2
     CPUID(7, 0);
     cpu |= !!(EBX & AVX2_POS) << 9;
-    //AVX2 = EBX & AVX2_POS;
 
     // Obtener numero de Nucleos e Hilos
     for (int i = 0; i < 12; i++) vendor_id[i] = vendor_id[i] & ~32;
@@ -137,15 +129,6 @@ void get_cpu_info() {
         *reinterpret_cast<uint32_t*>(model_name + j + 12) = EDX;
     }
     model_name[47] = '\0';
-
-    auto print_component = [](int size, const char* type, const char* msg) {
-        fmt::print(
-            "┌{0:─^{2}}┐\n"
-            "│{1: ^{2}}│ {3}\n"
-            "└{0:─^{2}}┘\n",
-            "", type, size, msg
-        );
-    };
 
     const char* inst[] = {
         "none", "SSE", "SSE2", "SSE3", "SSE4.1", "SSE4.2",
