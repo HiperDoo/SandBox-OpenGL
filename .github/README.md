@@ -143,7 +143,12 @@
 
 <!-- REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1 -->
 ## 🔨 Compilación Linux y Windows
- Vaya a la carpeta raíz de este proyecto (/SandBox-OpenGL) y abra una nueva Terminal/CMD para ejecutar los siguientes comandos (o simplemente haga doble-click sobre `sh.bat`:
+Para descargar correctamente este repositorio (y sus respectivos sub-módulos), abra una nueva Terminal/CMD y diríjase al directorio (usando `cd ...`) donde desee realizar la instalación.
+Una vez dentro del directorio, ejecute el siguiente comando de descarga:
+
+`git clone --recurse-submodules -j4 https://github.com/HiperDoo/SandBox-OpenGL.git`
+
+Por último, acceda al directorio `/SandBox-OpenGL`, en el cual puede hacer uso del archivo `sh.bat` (ya sea ejecutándolo desde la terminal o un simple doble-click sobre el archivo) para compilar y ejecutar el proyecto.
 ```bash
 # Construir proyecto (ejecutar una única vez):
 ./sh.bat setup
@@ -158,4 +163,6 @@
 
 ## 💣 ¿Algún error?
 > Aquí hay una lista de algunos de los posibles errores con soluciones que podrías llegar a enfrentarte (si tienes algún error o problema, recuerda que puedes ir a **[Issues](https://github.com/HiperDoo/SandBox-OpenGL/issues)** y describir la situación en la que te encuentras para poder ayudarte).
-* **TODO** - Agregar lista de posibles errores y sus soluciones...
+* Para usuarios de Windows, verificar que los directorios de MinGW y CMake estén en Variables de Entorno.
+* Verificar que las versiones tanto de programas como librerías sean las mismas (no debería de haber problema con nuevas versiones, pero nunca se sabe :p).
+* Para usuarios de Windows, si la terminal no muestra los colores en el texto (en cambio una combinación de caracteres extraños), ejecutar `REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1` en una nueva terminal y volver ejecutar el programa.

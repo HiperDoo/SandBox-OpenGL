@@ -29,7 +29,7 @@ set "rootdir=%CD%"
 
 if "%1" == "" (
     set flag=1==1
-    set /p input="Ingrese la accion a realizar... ej. (download, setup, build o run): "
+    set /p input="Ingrese la accion a realizar... ej. (setup, build o run): "
 ) else (
     set flag=1==0
     set input=%1
