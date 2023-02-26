@@ -3,4 +3,4 @@ build/
 *.exe
 *.app
 Release/bunny/
-translate-model.py
+Release/translate-model.py
