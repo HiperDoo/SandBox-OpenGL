@@ -53,6 +53,7 @@ HEADERS(HEADER_FILES "include/*.hpp")
 ADD_EXECUTABLE(${RELEASE} ${SRC_FILES})
 SET_TARGET_PROPERTIES(${RELEASE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Release")
 
+# La bandera -s hace que VScode chille para debuguear
 ADD_COMPILE_DEFINITIONS(GLEW_STATIC)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -std=c++17 -O3 -s -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \

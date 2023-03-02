@@ -228,7 +228,7 @@ void run_program() {
     initResources();
 
     Mesh mesh;
-    mesh.loadMesh("models/bunny/bunny.bin");
+    mesh.loadMesh("models/sword/sword.bin");
 
     // Activacion de la funcion Blend para asi renderizar
     // imagenes/texturas con transparencia.

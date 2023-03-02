@@ -56,8 +56,9 @@ float logisticDepth(float depth) {
 }
 
 void main() {
-	float depth = logisticDepth(gl_FragCoord.z);
-    FragColor = pointLight() * (1.0f - depth) + vec4(depth * vec3(1.0f), 1.0f);
-    FragColor.a = 1.0f;
+	//float depth = logisticDepth(gl_FragCoord.z);
+    //FragColor = pointLight() * (1.0f - depth) + vec4(depth * vec3(1.0f), 1.0f);
 	//FragColor = vec4(vec3(linearizeDepth(gl_FragCoord.z) / FAR), 1.0f);
+	FragColor = pointLight();
+	FragColor.a = 1.0f;
 }

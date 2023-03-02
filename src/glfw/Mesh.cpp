@@ -40,10 +40,17 @@ void Mesh::loadMesh(const char* file_path) {
     diffuse.loadImage(vertex_buff.data + ranges.tex0_start,
         GL_RGBA8, GL_RGBA,
         GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    specular.loadImage(vertex_buff.data + ranges.tex1_start,
-        GL_R8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+    //specular.loadImage(vertex_buff.data + ranges.tex1_start,
+    //    GL_R8, GL_RGBA,
+    //    GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
 
+    float* temp = (float*)(vertex_buff.data + ranges.vert_start);
+    printf("pos: [%f, %f, %f]\n", *temp, *(temp + 1), *(temp + 2));
+    printf("uvs: [%f, %f]\n", *(temp + 3), *(temp + 4));
+    printf("norm: [%f, %f, %f]\n", *(temp + 5), *(temp + 6), *(temp + 7));
+
+    GLuint* temp2 = (GLuint*)(vertex_buff.data + ranges.indi_start);
+    printf("indi: [%u, %u, %u]\n", *temp2, *(temp2 + 1), *(temp2 + 2));
 
     object.initObject(
         (float*)(vertex_buff.data + ranges.vert_start), ranges.vert_offset,
@@ -64,7 +71,7 @@ void Mesh::loadMesh(const char* file_path) {
 
     glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
         0.0f,
-        -0.029999999329447746f,
+        -5.0f,
         0.0f
     ));
     glm::mat4 rot = glm::mat4_cast(glm::quat(
@@ -73,7 +80,7 @@ void Mesh::loadMesh(const char* file_path) {
         0.0f,
         0.7071068286895752f
     ));
-    glm::mat4 sca = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
+    glm::mat4 sca = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
     shader.setUniformMat4f(u_model, trans * -rot * sca);
 
     // TODO: Hacer un personaje tipo '256 fes', el cual tendra una especie de caja
