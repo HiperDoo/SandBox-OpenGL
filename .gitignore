@@ -2,5 +2,4 @@
 build/
 *.exe
 *.app
-Release/bunny/
-Release/translate-model.py
+Release/model.py
