@@ -5,6 +5,7 @@ Cpp_img cpp_img;
 Piramid piramid;
 Wood_Floor w_floor;
 Light light;
+Mesh sword;
 
 void initResources() {
     const char* skybox_file_paths[6] = {
@@ -103,7 +104,6 @@ void initResources() {
         0, 2, 3
     };
 
-
     constexpr GLfloat light_vert[] = {
         -0.1f, -0.1f,  0.1f,
         -0.1f, -0.1f, -0.1f,
@@ -131,14 +131,12 @@ void initResources() {
     };
 
 
-    // Inicializacion de todos los shaders (tanto vertex como fragment shaders)
-    //Shader::createBuffer();
+    ////////// Inicializacion de todos los shaders (tanto vertex como fragment shaders)
     skybox.shader.initShader("shaders/skybox.vert", "shaders/skybox.frag");
     cpp_img.shader.initShader("shaders/cpp.vert", "shaders/cpp.frag");
     piramid.shader.initShader("shaders/piramid.vert", "shaders/piramid.frag");
     w_floor.shader.initShader("shaders/floor.vert", "shaders/floor.frag");
     light.shader.initShader("shaders/light.vert", "shaders/light.frag");
-    //Shader::destroyBuffer();
 
 
     // Se obtienen todos los uniforms (variables globales que se usan dentro de los shaders),
@@ -165,7 +163,7 @@ void initResources() {
     light.u_lightColor = light.shader.getUniformLocation("u_LightColor");
 
 
-    // Inicializacion de todas las texturas (obtenidas de sus respectivos archivos)
+    ////////// Inicializacion de todas las texturas (obtenidas de sus respectivos archivos)
     skybox.texture.loadImagesCubeMap(skybox_file_paths,
         GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
 
@@ -185,7 +183,7 @@ void initResources() {
         GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
 
 
-    // Inicializacion de todos los objetos de vertices
+    ////////// Inicializacion de todos los objetos de vertices
     skybox.vertexObj.initObject(
         skybox_vert, sizeof(skybox_vert),
         skybox_indi, sizeof(skybox_indi));
@@ -212,30 +210,49 @@ void initResources() {
     light.vertexObj.setAttributes(ATTR_POSITION, 3);
 
 
-    // Inicializacion de uniforms invariantes
+    ////////// Inicializacion de meshes (objetos)
+    // TODO: Hacer un personaje tipo '256 fes', el cual tendra una especie de caja
+    // lleno de cosas que caracterise a C++ (mejorar idea...)
+    sword.loadMesh("models/sword/sword.bin");
+
+
+    ////////// Inicializacion de uniforms constantes
+    // TODO: mejorar el sistema de posicionamiento de objetos, demasiado hardcode aqui
+    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
+
+	glm::mat4 floorModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));
+
+    glm::mat4 swordModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, -1.0f)); // Posicion
+    swordModel *= glm::mat4_cast(glm::quat( // Rotacion
+        0.7071068286895752f,
+        0.0f, 0.0f,
+        0.7071068286895752f
+    ));
+    swordModel *= glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)); // Escala
+
+    // Skybox
     skybox.shader.setUniform1i(skybox.shader.getUniformLocation("u_Cube"), 0);
     cpp_img.shader.setUniform1i(cpp_img.shader.getUniformLocation("u_Texture"), 0);
 
-    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-    lightModel = glm::translate(lightModel, lightPos);
-
-    glm::vec3 objectPos = glm::vec3(0.0f);
-	glm::mat4 objectModel = glm::mat4(1.0f);
-	objectModel = glm::translate(objectModel, objectPos);
-
+    // Light
     light.shader.setUniformMat4f(light.u_model, lightModel);
     light.shader.setUniformVec4f(light.u_lightColor, lightColor);
 
-    piramid.shader.setUniformMat4f(piramid.u_model, objectModel);
+    // Piramid
+    piramid.shader.setUniformMat4f(piramid.u_model, floorModel);
     piramid.shader.setUniformVec4f(piramid.u_lightColor, lightColor);
     piramid.shader.setUniformVec3f(piramid.u_lightPos, lightPos);
 
-    w_floor.shader.setUniformMat4f(w_floor.u_model, objectModel);
+    // Floor
+    w_floor.shader.setUniformMat4f(w_floor.u_model, floorModel);
     w_floor.shader.setUniformVec4f(w_floor.u_lightColor, lightColor);
     w_floor.shader.setUniformVec3f(w_floor.u_lightPos, lightPos);
 
     w_floor.shader.setUniform1i(w_floor.shader.getUniformLocation("u_Texture_0"), 0);
 	w_floor.shader.setUniform1i(w_floor.shader.getUniformLocation("u_Texture_1"), 1);
+
+    // Sword
+    sword.set_light_and_position(lightColor, lightPos, swordModel);
 }

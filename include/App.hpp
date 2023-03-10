@@ -8,7 +8,6 @@
 #endif
 
 #include "Renderer.hpp"
-#include "Mesh.hpp"
 
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 5
@@ -225,24 +224,20 @@ void init_GLFW() {
 }
 
 void run_program() {
+    // Inicializar objetos graficos.
     initResources();
+    // Desalojar buffers.
+    vertex_buff.destroyBuffer();
+    shader_buff.destroyBuffer();
 
-    Mesh mesh;
-    mesh.loadMesh("models/sword/sword.bin");
-
-    // Activacion de la funcion Blend para asi renderizar
-    // imagenes/texturas con transparencia.
+    // Activacion de la funcion Blend para asi renderizar imagenes/texturas con transparencia.
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Respetar la posicion de profundidad de cada objeto renderizado.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     // Evitar renderizar triangulos que no apuntan a la camara.
-    // TODO: Direcciones de caras invertidas del modelo, reparar.
-    glCullFace(GL_BACK);
+    glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
-
-    vertex_buff.destroyBuffer();
-    shader_buff.destroyBuffer();
 
     //#define FRAME_RATE 1.0f / 60.0f
     //float rotation{0.0f};
@@ -271,10 +266,7 @@ void run_program() {
         renderFloor();
         renderLight();
         // renderCppImg();
-
-        glEnable(GL_CULL_FACE);
-        mesh.render();
-        glDisable(GL_CULL_FACE);
+        renderSword();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -287,67 +279,3 @@ void shut_down() {
 }
 
 #endif
-
-/*Model model;
-    model.initModel("bunny/scene.gltf");
-
-    VertexObjIndex vert_model;
-    vert_model.initObject(
-        model.vertices.data()->v, model.vertices.size() * 8 * sizeof(float),
-        model.indices.data(), model.indices.size() * sizeof(GLuint)
-    );
-    vert_model.setAttributes(ATTR_POSITION, 3, ATTR_TEXCOORD, 2, ATTR_NORMAL, 3);
-    Texture2D diffuse, specular;
-    diffuse.loadImage(model.textures[0].c_str(),
-        GL_RGBA8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    specular.loadImage(model.textures[1].c_str(),
-        GL_R8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    Shader shader_model;
-    //Shader::createBuffer();
-    shader_model.initShader("shaders/model.vert", "shaders/model.frag");
-    //Shader::destroyBuffer();
-
-    GLint u_camera = shader_model.getUniformLocation("u_Camera");
-    GLint u_cameraPos = shader_model.getUniformLocation("u_CameraPos");
-    GLint u_model = shader_model.getUniformLocation("u_Model");
-    GLint u_lightColor = shader_model.getUniformLocation("u_LightColor");
-    GLint u_lightPos = shader_model.getUniformLocation("u_LightPos");
-
-    GLint u_translation = shader_model.getUniformLocation("u_Translation");
-    GLint u_rotation = shader_model.getUniformLocation("u_Rotation");
-    GLint u_scale = shader_model.getUniformLocation("u_Scale");
-
-    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-    glm::mat4 lightModel = glm::mat4(1.0f);
-    lightModel = glm::translate(lightModel, lightPos);
-
-    shader_model.setUniformVec4f(u_lightColor, lightColor);
-    shader_model.setUniformVec3f(u_lightPos, lightPos);
-    shader_model.setUniform1i(shader_model.getUniformLocation("u_Diffuse_0"), 0);
-    shader_model.setUniform1i(shader_model.getUniformLocation("u_Specular_0"), 1);*/
-
-/*shader_model.setUniformVec3f(u_cameraPos, camera.position);
-        shader_model.setUniformMat4f(u_camera, camera.matrix);
-
-        shader_model.bind();
-        diffuse.bind(0);
-        specular.bind(1);
-
-        glm::mat4 trans = glm::mat4(1.0f);
-        glm::mat4 rot = glm::mat4(1.0f);
-        glm::mat4 sca = glm::mat4(1.0f);
-
-        // Transform the matrices to their correct form
-        trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f));
-        rot = glm::mat4_cast(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-        sca = glm::scale(sca, glm::vec3(1.0f, 1.0f, 1.0f));
-
-        // Push the matrices to the vertex shader
-        shader_model.setUniformMat4f(u_translation, trans);
-        shader_model.setUniformMat4f(u_rotation, rot);
-        shader_model.setUniformMat4f(u_scale, sca);
-        shader_model.setUniformMat4f(u_model, model.matricesMeshes[0]);
-        vert_model.render();*/

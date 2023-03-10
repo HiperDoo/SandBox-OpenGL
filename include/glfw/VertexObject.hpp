@@ -11,7 +11,6 @@ class VertexCommon {
 protected:
 	//=====>>> Variables Privadas
 	GLuint vbo_id, vao_id;
-	GLsizei attr_length;
 
 	//=====>>> Funciones Privadas
 	GLsizei attribLength() const { return 0; }
@@ -32,7 +31,7 @@ public:
 	GLsizei elements;
 
 	//=====>>> Constructor y Destructor
-	VertexCommon() : vbo_id(0), vao_id(0), attr_length(0), elements(0) {}
+	VertexCommon() : vbo_id(0), vao_id(0), elements(0) {}
 	~VertexCommon() { glDeleteBuffers(1, &vbo_id); glDeleteVertexArrays(1, &vao_id); }
 };
 
@@ -52,7 +51,7 @@ public:
 
 	template<class... A>
 	void setAttributes(A... args) {
-		attr_length = attribLength(args...);
+		const GLsizei attr_length = attribLength(args...);
 		attrImpl(0, args...);
 		glVertexArrayVertexBuffer(vao_id, 0, vbo_id, 0, attr_length * sizeof(GLfloat));
 
@@ -79,7 +78,7 @@ public:
 
 	template<class... A>
 	void setAttributes(A... args) {
-		attr_length = attribLength(args...);
+		const GLsizei attr_length = attribLength(args...);
 		attrImpl(0, args...);
 		glVertexArrayVertexBuffer(vao_id, 0, vbo_id, 0, attr_length * sizeof(GLfloat));
 	}

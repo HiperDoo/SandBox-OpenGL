@@ -17,7 +17,8 @@ public:
 	~Shader();
 
 	//=====>>> Funciones
-    void initShader(const char* vertex_path, const char* fragment_path);
+    void initShader(const char* vertex_path, const char* fragment_path,
+        const unsigned int offset = 0);
     void bind() const;
     GLint getUniformLocation(const char* name) const;
 

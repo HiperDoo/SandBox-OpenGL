@@ -20,7 +20,7 @@ extern char* window_name;
 extern int screen_width;
 extern int screen_height;
 
-extern io::File_Buffer<32 * ONE_MB> vertex_buff;
-extern io::File_Buffer<16 * ONE_KB> shader_buff;
+extern io::Shader_Buffer shader_buff;
+extern io::Vertex_Buffer vertex_buff;
 
 #endif

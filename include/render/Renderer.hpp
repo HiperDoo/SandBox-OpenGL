@@ -16,4 +16,6 @@ extern void renderFloor();
 
 extern void renderLight();
 
+extern void renderSword();
+
 #endif

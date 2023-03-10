@@ -11,23 +11,37 @@
 // FILE MANAGER
 //=============
 namespace io {
-    #define ONE_KB 1024
-    #define ONE_MB ONE_KB * ONE_KB
+    #define SHADER_HEADER "#version 450 core\n"
 
-    #define SHADER_BUFF 0
-    #define VERTEX_BUFF 1
+    #define _16_KB 16 * 1024
+    #define _32_MB 32 * 1024 * 1024
 
     template <int T>
-    struct File_Buffer {
-        char* data{nullptr};
-        size_t size{0};
+    class File_Buffer {
+        public:
+            //=====>>> Variables Publicas
+            char* data{nullptr};
+            size_t size{0};
 
-        File_Buffer();
-        ~File_Buffer();
+            //=====>>> Constructor y Destructor
+            File_Buffer();
+            ~File_Buffer();
 
-        void load_from_file(const char* file_path);
-        void destroyBuffer();
+            //=====>>> Funciones
+            void load_from_file(const char* file_path, const unsigned int offset = 0);
+            void destroyBuffer();
+
+            // Funcion solamente para buffer de shaders
+            template <class... D>
+            unsigned int add_defines_to_shader(D... defines) {
+                (std::memcpy(data + sizeof(SHADER_HEADER) - 1, defines, std::strlen(defines)), ...);
+
+                return (std::strlen(defines) + ... + 0);
+            }
     };
+
+    using Shader_Buffer = File_Buffer<_16_KB>;
+    using Vertex_Buffer = File_Buffer<_32_MB>;
 };
 
 //======

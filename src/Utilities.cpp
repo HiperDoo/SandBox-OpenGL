@@ -4,8 +4,19 @@
 // FILE MANAGER
 //=============
 namespace io {
+    //=====>>> Constructor y Destructor
     template <int T>
-    void File_Buffer<T>::load_from_file(const char* file_path) {
+    File_Buffer<T>::File_Buffer() {
+        data = new char[T];
+        if (T == _16_KB) std::memcpy(data, SHADER_HEADER, sizeof(SHADER_HEADER) - 1);
+    }
+
+    template <int T>
+    File_Buffer<T>::~File_Buffer() { if (!data) { delete[] data; } }
+
+    //=====>>> Funciones
+    template <int T>
+    void File_Buffer<T>::load_from_file(const char* file_path, const unsigned int offset) {
         std::ifstream file(file_path, std::ifstream::binary);
         if (!file.is_open()) {
             auto error = std::system_error(errno, std::system_category());
@@ -22,24 +33,25 @@ namespace io {
             throw 1;
         }
         file.seekg(0);
-        file.read(data, size);
-        data[size] = '\0';
+        if (T == _16_KB) {
+            constexpr unsigned int header = sizeof(SHADER_HEADER) - 1;
+            file.read(data + header + offset, size);
+            data[size + header + offset] = '\0';
+        } else {
+            file.read(data, size);
+            data[size] = '\0';
+        }
 
         file.close();
     }
 
     template <int T>
-    File_Buffer<T>::File_Buffer() { data = new char[T]; }
-
-    template <int T>
-    File_Buffer<T>::~File_Buffer() { if (!data) { delete[] data; } }
-
-    template <int T>
     void File_Buffer<T>::destroyBuffer() { if (!data) { delete[] data; } }
+
+    template class File_Buffer<_16_KB>;
+    template class File_Buffer<_32_MB>;
 };
 
-template struct io::File_Buffer<32 * ONE_MB>;
-template struct io::File_Buffer<16 * ONE_KB>;
 
 //==============
 // PRINT MANAGER

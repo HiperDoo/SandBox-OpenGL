@@ -11,8 +11,8 @@ char* window_name{nullptr};
 int screen_width{720};
 int screen_height{480};
 
-io::File_Buffer<32 * ONE_MB> vertex_buff;
-io::File_Buffer<16 * ONE_KB> shader_buff;
+io::Shader_Buffer shader_buff;
+io::Vertex_Buffer vertex_buff;
 
 int main(void) {
     std::ios_base::sync_with_stdio(false);
@@ -35,28 +35,32 @@ int main(void) {
         init_GLFW();
         run_program();
         shut_down();
+
         cmd::console_print(cmd::server, cmd::debug,
             "Programa finalizado de forma exitosa :>");
+        
         return EXIT_SUCCESS;
     } catch (const std::system_error& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
+
         exit_code = EXIT_FAILURE;
     } catch (const std::exception& e) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
+
         exit_code = EXIT_FAILURE;
     } catch (const int e) {
         exit_code = e;
     } catch (...) {
         cmd::console_print(cmd::server, cmd::error,
             "Ha ocurrido un error desconocido (posiblemente de un agente de 3ros)");
+
         exit_code = EXIT_FAILURE;
     }
 
     shut_down();
 
-    // TODO: Mostrar este mensaje cuando se cierre la aplicacion de forma erronea
     cmd::console_print(cmd::server, cmd::debug,
         "Presione Enter para salir...");
     getchar();

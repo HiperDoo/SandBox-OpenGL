@@ -54,3 +54,9 @@ void renderLight() {
     light.shader.bind();
     light.vertexObj.render();
 }
+
+void renderSword() {
+    glEnable(GL_CULL_FACE);
+    sword.render();
+    glDisable(GL_CULL_FACE);
+}

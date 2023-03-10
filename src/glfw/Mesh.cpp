@@ -6,12 +6,8 @@ Mesh::Mesh() : u_camera(0), u_cameraPos(0), u_model(0),
 
 Mesh::~Mesh() {}
 
-//=====>>> Funciones Privadas
-
 //=====>>> Funciones
 void Mesh::loadMesh(const char* file_path) {
-    vertex_buff.load_from_file(file_path);
-
     struct {
         unsigned char pos{0}, uvs{0}, norm{0}, tex{0};
     } types;
@@ -22,11 +18,20 @@ void Mesh::loadMesh(const char* file_path) {
         unsigned long long indi_start{0}, indi_offset{0};
     } ranges;
 
+
+    // Cargar configuracion del modelo
+    vertex_buff.load_from_file(file_path);
     std::memcpy(&types, vertex_buff.data, sizeof(types));
     std::memcpy(&ranges, vertex_buff.data + sizeof(types), sizeof(ranges));
 
 
-    shader.initShader("shaders/model.vert", "shaders/model.frag");
+    // Inicializar shaders
+    shader.initShader(
+        "shaders/model.vert", "shaders/model.frag"
+        #ifdef HARDCODE_NO_SPECULAR_MAP
+        ,shader_buff.add_defines_to_shader("#define NO_SPECULAR\n")
+        #endif
+    );
     u_camera =      shader.getUniformLocation("u_Camera");
     u_cameraPos =   shader.getUniformLocation("u_CameraPos");
     u_model =       shader.getUniformLocation("u_Model");
@@ -34,57 +39,36 @@ void Mesh::loadMesh(const char* file_path) {
     u_lightPos =    shader.getUniformLocation("u_LightPos");
 
 
-    ranges.tex0_offset = ranges.tex0_offset > 31 ? 31 : ranges.tex0_offset;
-    ranges.tex1_offset = ranges.tex1_offset > 31 ? 31 : ranges.tex1_offset;
-
+    // Textura del Modelo
     diffuse.loadImage(vertex_buff.data + ranges.tex0_start,
         GL_RGBA8, GL_RGBA,
         GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    //specular.loadImage(vertex_buff.data + ranges.tex1_start,
-    //    GL_R8, GL_RGBA,
-    //    GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
 
-    float* temp = (float*)(vertex_buff.data + ranges.vert_start);
-    printf("pos: [%f, %f, %f]\n", *temp, *(temp + 1), *(temp + 2));
-    printf("uvs: [%f, %f]\n", *(temp + 3), *(temp + 4));
-    printf("norm: [%f, %f, %f]\n", *(temp + 5), *(temp + 6), *(temp + 7));
+    // Textura Specular Map
+    #ifndef HARDCODE_NO_SPECULAR_MAP
+    specular.loadImage(vertex_buff.data + ranges.tex1_start,
+        GL_R8, GL_RGBA,
+        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+    #endif
 
-    GLuint* temp2 = (GLuint*)(vertex_buff.data + ranges.indi_start);
-    printf("indi: [%u, %u, %u]\n", *temp2, *(temp2 + 1), *(temp2 + 2));
 
+    // Inicializar vertices del objeto
     object.initObject(
         (float*)(vertex_buff.data + ranges.vert_start), ranges.vert_offset,
         (GLuint*)(vertex_buff.data + ranges.indi_start), ranges.indi_offset);
     object.setAttributes(ATTR_POSITION, types.pos, ATTR_TEXCOORD, types.uvs, ATTR_NORMAL, types.norm);
+}
 
-
-    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-    lightModel = glm::translate(lightModel, lightPos);
-
+void Mesh::set_light_and_position(const glm::vec4& lightColor,
+    const glm::vec3& lightPos, const glm::mat4& objectModel) {
+    shader.setUniformMat4f(u_model, objectModel);
     shader.setUniformVec4f(u_lightColor, lightColor);
     shader.setUniformVec3f(u_lightPos, lightPos);
+
     shader.setUniform1i(shader.getUniformLocation("u_Diffuse_0"), 0);
+    #ifndef HARDCODE_NO_SPECULAR_MAP
 	shader.setUniform1i(shader.getUniformLocation("u_Specular_0"), 1);
-
-
-    glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-        0.0f,
-        -5.0f,
-        0.0f
-    ));
-    glm::mat4 rot = glm::mat4_cast(glm::quat(
-        0.7071068286895752f,
-        0.0f,
-        0.0f,
-        0.7071068286895752f
-    ));
-    glm::mat4 sca = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-    shader.setUniformMat4f(u_model, trans * -rot * sca);
-
-    // TODO: Hacer un personaje tipo '256 fes', el cual tendra una especie de caja
-    // lleno de algo que caracterise a C++ (pensar en idea)
+    #endif
 }
 
 void Mesh::render() const {
@@ -93,7 +77,9 @@ void Mesh::render() const {
 
     shader.bind();
     diffuse.bind(0);
+    #ifndef HARDCODE_NO_SPECULAR_MAP
     specular.bind(1);
+    #endif
 
     object.render();
 }

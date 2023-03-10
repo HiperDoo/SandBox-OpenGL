@@ -1,11 +1,9 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 
-#include "Global.hpp"
+#include "Mesh.hpp"
 
-#include "Shader.hpp"
-#include "Texture.hpp"
-#include "VertexObject.hpp"
+class Mesh;
 
 struct Skybox {
     Shader shader;
@@ -46,6 +44,7 @@ extern Cpp_img cpp_img;
 extern Piramid piramid;
 extern Wood_Floor w_floor;
 extern Light light;
+extern Mesh sword;
 
 void initResources();
 

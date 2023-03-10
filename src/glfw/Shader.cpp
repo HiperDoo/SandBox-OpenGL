@@ -15,7 +15,7 @@ GLint Shader::compileShader(const char* file_path, GLenum type) {
     if (!result) {
         GLchar InfoLog[256];
         glGetShaderInfoLog(shader_id, sizeof(InfoLog), NULL, InfoLog);
-        printf("%s", InfoLog); // TODO: limpiar e incorporar mensaje en el Log-Sys
+        printf("%s", InfoLog); // TODO: limpiar e incorporar mensaje en el cmd::console
         glDeleteShader(shader_id);
         cmd::console_print(cmd::opengl, cmd::error,
             "Falla al compilar shader (archivo: '{}').", file_path);
@@ -26,11 +26,12 @@ GLint Shader::compileShader(const char* file_path, GLenum type) {
 }
 
 //=====>>> Funciones
-void Shader::initShader(const char* vertex_path, const char* fragment_path) {
+void Shader::initShader(const char* vertex_path, const char* fragment_path,
+    const unsigned int offset) {
     // Copia de los archivos vertex y fragment en un buffer para luego ser compilados
-    shader_buff.load_from_file(vertex_path);
+    shader_buff.load_from_file(vertex_path, offset);
     GLint vs = compileShader(vertex_path, GL_VERTEX_SHADER);
-    shader_buff.load_from_file(fragment_path);
+    shader_buff.load_from_file(fragment_path, offset);
     GLint fs = compileShader(fragment_path, GL_FRAGMENT_SHADER);
 
     program_id = glCreateProgram();
