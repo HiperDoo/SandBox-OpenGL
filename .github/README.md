@@ -16,7 +16,7 @@
     <br><br><p>Desarrollado con:</p>
 
 ![C++17](https://img.shields.io/badge/C++17-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
-![Terminal](https://img.shields.io/badge/GCC%2012.2.1-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white)
+![Terminal](https://img.shields.io/badge/GCC%2013.1.1-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white)
 ![CMake](https://img.shields.io/badge/CMake%203.25.2-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white)
 
 ![OpenGL](https://img.shields.io/badge/OpenGL%204.5-%23FFFFFF.svg?style=for-the-badge&logo=opengl)
@@ -28,6 +28,8 @@
 -->
 
 ---
+Links de descarga del programa
+
 ![Download](https://img.shields.io/badge/Descargar%20x64-0.0.1-%234ea94b.svg?style=for-the-badge)
 <img src="https://github.com/HiperDoo/media/blob/main/icons/w10.png" width="28">
 <img src="https://github.com/HiperDoo/media/blob/main/icons/linux.png" width="28">
@@ -46,7 +48,7 @@
 </p>
 
 > 📌 Los métodos de programación que utilicé son mi **propio estándar** sobre cómo debería hacer un proyecto en **C/C++** (en constante mejora).\
-📌 Esta clase de proyectos los considero como hobbies, por lo que tienen la **menor prioridad** sobre el tiempo de mi día, avanzo en esta clase de proyectos cuando tengo tiempo y ganas :p\
+📌 Esta clase de proyectos los considero como hobbies, por lo que tienen la **menor prioridad** sobre el tiempo de mi día, avanzo en esta clase de proyectos cuando tengo tiempo y ganas :p
 
 > **Warning** - Este repositorio **NO** es un tutorial ni un estándar definitivo, pero cualquier tipo de duda es bien recibida.
 
@@ -71,26 +73,28 @@
 <br>
 
 ## 📜 TODO
-* **TODO** - Agregar lista de cosas por hacer...
+* Reordenar código y lógica de esta en zonas críticas (renderizado de objetos).
+* Mover recursos visuales del Stack al Heap (falta total de dinamismo en la creación de objetos).
+* **TODO** - Agregar siguiente lista de metas al terminar las la lista anterior…
 
 <br>
 
 ## 🧰 Requisitos y Dependencias
-> **Note** - La sección de `Aplicaciones/Paquetes` y `Librerías/Dependencias` sólo son importantes si se desea compilar el proyecto.
+> **Note** - La sección de `Aplicaciones/Paquetes`, `Librerías/Dependencias` y `Compilación Linux y Windows` sólo son importantes si se desea compilar el proyecto.
 
 **🔩 Compatibilidad del Sistema**
 * **OS** - Linux/Windows 10 (no ha sido probado en las diferentes distribuciones de Linux que existen, pero no hay razón por la que no sea posible ejecutar el programa).
 * **CPU** - De `64 bits`.
 * **GPU** - Con soporte para OpenGL `4.5` o superior.
-* **RAM** - `250MB` (ni se para que especifico esto xd).
-* **VRAM** - `200MB` (otro dato que no es de preocuparse).
+* **RAM** - `180MB` (ni se para que especifico esto :p).
+* **VRAM** - `130MB` (otro dato que no es de preocuparse).
 
 **📦 Aplicaciones/Paquetes**
 > Para Linux y Windows descargar...
 * **[CMake](https://cmake.org/download/)** - `3.25.2` Administrador para la compilación.
 * **[Git](https://git-scm.com/downloads)** - `3.39.1` Encargado de descargar este repositorio (se recomienda usar esto ya que descarga y acomodar las librerías de forma automática).
 > Para Linux descargar...
-* **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.12.1` Compilador de código **C/C++**.
+* **[GCC](https://www.geeksforgeeks.org/how-to-install-gcc-compiler-on-linux/)** - `1.13.1` Compilador de código **C/C++**.
 * **[Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)** - `4.4` Para compilar las librerías de forma estática (mayor portabilidad y velocidad en el ejecutable final).
 > Para Windows descargar...
 * **[MinGW](https://github.com/niXman/mingw-builds-binaries/releases)** - `12.2.0` Compilador de código **C/C++** y también **mingw32-make** (lo mismo que **make**).
@@ -105,7 +109,7 @@
 <details>
 <summary>Árbol de dependencias:</summary>
 
-> Para que las dependencias (librerías) sean visibles por CMake, es necesario ordenarlas dentro de la carpeta `/SandBox-OpenGL/dep` de la siguiente manera (solamente en caso de **NO** haberse usado `Git`, sino una instalación y descarga completamente manual):
+> Para que las dependencias (librerías) sean visibles para CMake, es necesario tener un orden de estas dentro de la carpeta `/SandBox-OpenGL/dep` de la siguiente manera (solamente en caso de **NO** haber usando el comando `git clone …`, sino mediante descargas manuales):
 > ```
 > $ SandBox-OpenGL
 > ├── .github
@@ -143,22 +147,26 @@
 
 <!-- REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1 -->
 ## 🔨 Compilación Linux y Windows
-Para descargar correctamente este repositorio (y sus respectivos sub-módulos), abra una nueva Terminal/CMD y diríjase al directorio (usando `cd ...`) donde desee realizar la instalación.
-Una vez dentro del directorio, ejecute el siguiente comando de descarga:
+> **Note** - Sección para compilar el proyecto (si solo deseas correr el programa, vuelve arriba a la sección de descargas).
 
-`git clone --recurse-submodules -j4 https://github.com/HiperDoo/SandBox-OpenGL.git`
-
-Por último, acceda al directorio `/SandBox-OpenGL`, en el cual puede hacer uso del archivo `sh.bat` (ya sea ejecutándolo desde la terminal o un simple doble-click sobre el archivo) para compilar y ejecutar el proyecto.
+Para compilar correctamente este repositorio con sus respectivas librerías (sub-módulos), diríjase al directorio donde desee hacer la instalación dentro de una Terminal/CMD usando los comandos `cd /tu/directorio`. Una vez dentro del directorio, ejecute la siguiente serie de comandos:
 ```bash
-# Construir proyecto (ejecutar una única vez):
+# Descarga del repositorio con sus respectivos sub-módulos
+git clone --recurse-submodules -j4 https://github.com/HiperDoo/SandBox-OpenGL.git
+
+# Entrar a la carpeta raíz
+cd SandBox-OpenGL
+
+# Construir repositorio
 ./sh.bat setup
 
-# Compilación del proyecto:
+# Compilar código
 ./sh.bat build
 
-# Ejecución del programa:
+# Ejecución del programa
 ./sh.bat run
 ```
+Repita únicamente los últimos dos pasos al hacer cambios al código
 <br>
 
 ## 💣 ¿Algún error?

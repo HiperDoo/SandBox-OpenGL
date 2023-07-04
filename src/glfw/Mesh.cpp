@@ -1,13 +1,16 @@
 #include "Mesh.hpp"
 
 //=====>>> Constructor y Destructor
-Mesh::Mesh() : u_camera(0), u_cameraPos(0), u_model(0),
-    u_lightColor(0), u_lightPos(0) {}
+template <int T> Mesh<T>::Mesh() : u_camera(0), u_cameraPos(0),
+    u_model(0), u_lightColor(0), u_lightPos(0), matrix(1.0f),
+    position(0.0f), rotation(1.0f), scale(1.0f) {}
 
-Mesh::~Mesh() {}
+template <int T> Mesh<T>::~Mesh() {}
 
 //=====>>> Funciones
-void Mesh::loadMesh(const char* file_path) {
+template <int T>
+void Mesh<T>::loadMesh(const char* file_path, const char* vertex_path, const char* fragment_path,
+    const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& sca) {
     struct {
         unsigned char pos{0}, uvs{0}, norm{0}, tex{0};
     } types;
@@ -27,7 +30,7 @@ void Mesh::loadMesh(const char* file_path) {
 
     // Inicializar shaders
     shader.initShader(
-        "shaders/model.vert", "shaders/model.frag"
+        vertex_path, fragment_path
         #ifdef HARDCODE_NO_SPECULAR_MAP
         ,shader_buff.add_defines_to_shader("#define NO_SPECULAR\n")
         #endif
@@ -39,47 +42,55 @@ void Mesh::loadMesh(const char* file_path) {
     u_lightPos =    shader.getUniformLocation("u_LightPos");
 
 
-    // Textura del Modelo
-    diffuse.loadImage(vertex_buff.data + ranges.tex0_start,
-        GL_RGBA8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-
-    // Textura Specular Map
-    #ifndef HARDCODE_NO_SPECULAR_MAP
-    specular.loadImage(vertex_buff.data + ranges.tex1_start,
-        GL_R8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    #endif
+    if (T == 1) { // Textura del Modelo
+        diffuse.loadImage(vertex_buff.data + ranges.tex0_start,
+            GL_RGBA8, GL_RGBA,
+            GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+    } else if (T == 2) { // Textura Specular Map
+        specular.loadImage(vertex_buff.data + ranges.tex1_start,
+            GL_R8, GL_RGBA,
+            GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+    }
 
 
     // Inicializar vertices del objeto
     object.initObject(
         (float*)(vertex_buff.data + ranges.vert_start), ranges.vert_offset,
         (GLuint*)(vertex_buff.data + ranges.indi_start), ranges.indi_offset);
-    object.setAttributes(ATTR_POSITION, types.pos, ATTR_TEXCOORD, types.uvs, ATTR_NORMAL, types.norm);
+    if (T == 0) object.setAttributes(ATTR_POSITION, types.pos, ATTR_NORMAL, types.norm);
+    else        object.setAttributes(ATTR_POSITION, types.pos, ATTR_TEXCOORD, types.uvs, ATTR_NORMAL, types.norm);
+
+
+    // Transformar matrix del modelo
+    position = pos; rotation = rot; scale = sca;
+    matrix = glm::translate(matrix, pos);
+    matrix = glm::rotate(matrix, glm::radians(0.0f), rot);
+    matrix = glm::scale(matrix, sca);
+    shader.setUniformMat4f(u_model, matrix);
 }
 
-void Mesh::set_light_and_position(const glm::vec4& lightColor,
-    const glm::vec3& lightPos, const glm::mat4& objectModel) {
-    shader.setUniformMat4f(u_model, objectModel);
-    shader.setUniformVec4f(u_lightColor, lightColor);
+template <int T>
+void Mesh<T>::setLight(const glm::vec3& lightColor, const glm::vec3& lightPos) {
+    shader.setUniformVec3f(u_lightColor, lightColor);
     shader.setUniformVec3f(u_lightPos, lightPos);
 
-    shader.setUniform1i(shader.getUniformLocation("u_Diffuse_0"), 0);
-    #ifndef HARDCODE_NO_SPECULAR_MAP
-	shader.setUniform1i(shader.getUniformLocation("u_Specular_0"), 1);
-    #endif
+    if (T == 1)         shader.setUniform1i(shader.getUniformLocation("u_Diffuse_0"), 0);
+    else if (T == 2)    shader.setUniform1i(shader.getUniformLocation("u_Specular_0"), 1);
 }
 
-void Mesh::render() const {
+template <int T>
+void Mesh<T>::render() const {
+    shader.setUniformMat4f(u_model, matrix);
     shader.setUniformVec3f(u_cameraPos, camera.position);
     shader.setUniformMat4f(u_camera, camera.matrix);
 
     shader.bind();
-    diffuse.bind(0);
-    #ifndef HARDCODE_NO_SPECULAR_MAP
-    specular.bind(1);
-    #endif
+    if (T == 1)         diffuse.bind(0);
+    else if (T == 2)    specular.bind(1);
 
     object.render();
 }
+
+template class Mesh<0>;
+template class Mesh<1>;
+template class Mesh<2>;

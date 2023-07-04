@@ -6,16 +6,18 @@
 
 extern Camera camera;
 
-extern void renderSkyBox();
+/*extern void renderSkyBox();
 
 extern void renderCppImg();
 
-extern void renderPiramid(const float rotation);
+extern void renderPiramid();
 
 extern void renderFloor();
 
 extern void renderLight();
 
-extern void renderSword();
+extern void renderSword(const float rotation);*/
+
+extern void renderer(const float rotation);
 
 #endif

@@ -5,6 +5,7 @@
 #include <windows.h>
 #else
 #include <sys/sysinfo.h>
+#include <sys/ioctl.h>
 #endif
 
 #include "Renderer.hpp"
@@ -12,7 +13,21 @@
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 5
 
-void get_cpu_info() {
+void get_terminal_size(uint32_t& width) {
+    #if defined(_WIN32)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    width = (uint32_t)(csbi.srWindow.Right-csbi.srWindow.Left+1);
+    //height = (uint32_t)(csbi.srWindow.Bottom-csbi.srWindow.Top+1);
+    #else
+    struct winsize w;
+    ioctl(fileno(stdout), TIOCGWINSZ, &w);
+    width = (uint32_t)(w.ws_col);
+    //height = (uint32_t)(w.ws_row);
+    #endif
+}
+
+void get_pc_data() {
     const uint32_t SSE_POS   = 0x02000000;
     const uint32_t SSE2_POS  = 0x04000000;
     const uint32_t SSE3_POS  = 0x00000001;
@@ -136,8 +151,6 @@ void get_cpu_info() {
     int pos1{0}, pos2{0};
     asm ("bsrl %1, %0" : "=r" (pos1) : "b" ((char)cpu & 0xFF));
     asm ("bsrl %1, %0" : "=r" (pos2) : "r" (cpu >> 8));
-    cmd::console_print(cmd::server, cmd::debug, "Hardware utilizado:");
-    fmt::print("   CPU: {} - [{} | {}]\n", model_name, inst[pos1 + 1], inst[pos2 + 7]);
 
     double total_memory{0.0f};
     #ifdef _WIN32
@@ -150,7 +163,31 @@ void get_cpu_info() {
     sysinfo(&info);
     total_memory = info.totalram;
     #endif
-    fmt::print("   RAM: {:.1f} GB\n", total_memory  / 1073741824.0f);
+
+    const char* versions[3] = {
+        (const char*)glGetString(GL_RENDERER),
+        (const char*)glGetString(GL_VERSION),
+        (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)
+    };
+    const char* undefined = "Indefinido :(";
+
+    uint32_t width{0};
+    get_terminal_size(width);
+    width /= 2;
+
+    const auto separator = fmt::format("{:=^{}}\n\n", "", width);
+
+    // Imprimir especificaciones
+    fmt::print("\n{:=^{}}\n", "> Hardware Information <", width);
+    cmd::console_print(cmd::client, cmd::info, "CPU: {} - [{} | {}]", model_name, inst[pos1 + 1], inst[pos2 + 7]);
+    cmd::console_print(cmd::client, cmd::info, "RAM: {:.1f} GB", total_memory  / 1073741824.0f);
+    cmd::console_print(cmd::opengl, cmd::info, "GPU: {}", versions[0] ? versions[0] : undefined);
+    fmt::print(separator);
+
+    fmt::print("{:=^{}}\n", "> Drivers Information <", width);
+    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", versions[1] ? versions[1] : undefined);
+    cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", versions[2] ? versions[2] : undefined);
+    fmt::print(separator);
 
     delete[] vendor_id;
     delete[] model_name;
@@ -183,6 +220,7 @@ void init_GLFW() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Ventana flotante para WMs de Linux
 
     window_name = new char[32];
     strcpy(window_name, "SandBox OpenGL | fps: 60.0");
@@ -195,7 +233,7 @@ void init_GLFW() {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // 60fps
+    glfwSwapInterval(1); // FPS segun las capacidades del monitor
 
     if (glewInit() != GLEW_OK) {
         cmd::console_print(cmd::opengl, cmd::error,
@@ -204,23 +242,13 @@ void init_GLFW() {
     }
 
     // TODO: Ordenar el sistema de impresion de hardware (y agregar mas modulos, como la RAM)
-    get_cpu_info();
-
-    const char* versions[3] = {
-        (const char*)glGetString(GL_RENDERER),
-        (const char*)glGetString(GL_VERSION),
-        (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)
-    };
-    const char* undefined = "Indefinido...";
-    cmd::console_print(cmd::opengl, cmd::info, "Version de Render: {}", versions[0] ? versions[0] : undefined);
-    cmd::console_print(cmd::opengl, cmd::info, "Version de OpenGL: {}", versions[1] ? versions[1] : undefined);
-    cmd::console_print(cmd::opengl, cmd::info, "Version de Shader: {}", versions[2] ? versions[2] : undefined);
+    get_pc_data();
 
     // glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     glViewport(0, 0, screen_width, screen_height);
     cmd::console_print(cmd::server, cmd::debug,
-        "CONFIGURACION Y CREACION DE VENTANA OPENGL ({} secs)", clock.tock().count() / 1000.0f);
+        "CREACION Y CONFIGURACION DE VENTANA OPENGL ({} secs)", clock.tock().count() / 1000.0f);
 }
 
 void run_program() {
@@ -239,15 +267,13 @@ void run_program() {
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
-    //#define FRAME_RATE 1.0f / 60.0f
-    //float rotation{0.0f};
+    float rot{0.0f};
     double timeDiff{0.0f}, currTime{0.0f}, prevTime = glfwGetTime();
     unsigned int counter{0};
 
     while (!glfwWindowShouldClose(window)) {
         currTime = glfwGetTime(); counter++;
         if ((timeDiff = currTime - prevTime) >= 1.0f) {
-            //rotation += 0.5f;
             sprintf(window_name + 22, "%.1f", (1.0f / timeDiff) * counter);
             glfwSetWindowTitle(window, window_name);
 
@@ -255,18 +281,21 @@ void run_program() {
             counter = 0;
         }
 
+        rot = (rot < 360.0f) ? rot + 1.0f : 0.0f;
+
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.inputs();
         camera.updateMatrix();
 
-        renderSkyBox();
-        // renderPiramid(rotation);
-        renderFloor();
-        renderLight();
+        //renderSkyBox();
+        // renderPiramid();
+        //renderFloor();
+        //renderLight();
         // renderCppImg();
-        renderSword();
+        //renderSword(rot);
+        renderer(rot);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

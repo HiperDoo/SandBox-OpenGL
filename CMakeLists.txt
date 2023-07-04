@@ -53,10 +53,10 @@ HEADERS(HEADER_FILES "include/*.hpp")
 ADD_EXECUTABLE(${RELEASE} ${SRC_FILES})
 SET_TARGET_PROPERTIES(${RELEASE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Release")
 
-# La bandera -s hace que VScode chille para debuguear
+# La bandera -s hace que VScode shille para debuguear
 ADD_COMPILE_DEFINITIONS(GLEW_STATIC)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -std=c++17 -O3 -s -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
+    -std=c++17 -O3 -pipe -Wall -Wextra -Wpedantic -Wfloat-equal -march=core-avx2 \
     -static-libgcc -static-libstdc++"
 )
 
@@ -71,5 +71,5 @@ INCLUDE_DIRECTORIES(
 
 TARGET_LINK_LIBRARIES(${RELEASE} ${LIB_FLAGS})
 
-# Ignorar los warnings de main.cpp
+# Ignorar los warnings de main.cpp (deteccion de GPU dedicada)
 SET_SOURCE_FILES_PROPERTIES(src/main.cpp PROPERTIES COMPILE_FLAGS "-w")

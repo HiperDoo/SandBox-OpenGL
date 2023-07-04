@@ -3,8 +3,6 @@
 
 #include "Mesh.hpp"
 
-class Mesh;
-
 struct Skybox {
     Shader shader;
     TextureCubeMap texture;
@@ -44,7 +42,11 @@ extern Cpp_img cpp_img;
 extern Piramid piramid;
 extern Wood_Floor w_floor;
 extern Light light;
-extern Mesh sword;
+
+
+// Necesario Definir antes de instanciar (usar)
+class Objects;
+extern Objects objects;
 
 void initResources();
 

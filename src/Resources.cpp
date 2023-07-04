@@ -5,7 +5,8 @@ Cpp_img cpp_img;
 Piramid piramid;
 Wood_Floor w_floor;
 Light light;
-Mesh sword;
+
+Objects objects;
 
 void initResources() {
     const char* skybox_file_paths[6] = {
@@ -213,24 +214,37 @@ void initResources() {
     ////////// Inicializacion de meshes (objetos)
     // TODO: Hacer un personaje tipo '256 fes', el cual tendra una especie de caja
     // lleno de cosas que caracterise a C++ (mejorar idea...)
-    sword.loadMesh("models/sword/sword.bin");
+    objects.init(1, 2, 0);
+    objects.m_Common[0].loadMesh(
+        "models/sword/dragon.bin",
+        "shaders/test2.vert", "shaders/test2.frag",
+        glm::vec3(5.0f, 0.0f, 0.0f),    // Posicion
+        glm::vec3(1.0f),                // Rotacion
+        glm::vec3(0.5f)                 // Escala
+    );
+    objects.m_UVs[0].loadMesh(
+        "models/sword/sword.bin",
+        "shaders/model.vert", "shaders/model.frag",
+        glm::vec3(0.0f, 0.0f, -2.0f),
+        glm::vec3(1.0f), 
+        glm::vec3(0.1f)
+    );
+    objects.m_UVs[1].loadMesh(
+        "models/sword/prism.bin",
+        "shaders/test.vert", "shaders/test.frag",
+        glm::vec3(0.0f, 0.0f, -2.0f),
+        glm::vec3(1.0f),
+        glm::vec3(1.0f)
+    );
 
 
     ////////// Inicializacion de uniforms constantes
     // TODO: mejorar el sistema de posicionamiento de objetos, demasiado hardcode aqui
-    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
     glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
 
 	glm::mat4 floorModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));
-
-    glm::mat4 swordModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, -1.0f)); // Posicion
-    swordModel *= glm::mat4_cast(glm::quat( // Rotacion
-        0.7071068286895752f,
-        0.0f, 0.0f,
-        0.7071068286895752f
-    ));
-    swordModel *= glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)); // Escala
 
     // Skybox
     skybox.shader.setUniform1i(skybox.shader.getUniformLocation("u_Cube"), 0);
@@ -253,6 +267,21 @@ void initResources() {
     w_floor.shader.setUniform1i(w_floor.shader.getUniformLocation("u_Texture_0"), 0);
 	w_floor.shader.setUniform1i(w_floor.shader.getUniformLocation("u_Texture_1"), 1);
 
-    // Sword
-    sword.set_light_and_position(lightColor, lightPos, swordModel);
+    // Models
+    objects.m_Common[0].setLight(glm::vec3(lightColor.x, lightColor.y, lightColor.z), lightPos);
+    objects.m_UVs[0].setLight(glm::vec3(lightColor.x, lightColor.y, lightColor.z), lightPos);
+    objects.m_UVs[1].setLight(glm::vec3(lightColor.x, lightColor.y, lightColor.z), lightPos);
+
+    objects.init(0, 1, 0);
+    objects.m_UVs[0].loadMesh(
+        "models/sword/dragon.bin",
+        "shaders/simple.vert", "shaders/simple.frag",
+        glm::vec3(0.0f, -0.75f, -2.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.2f)
+    );
+    objects.m_UVs[0].setLight(
+        glm::vec3(1.0f, 0.0f, 0.0f), // Color
+        glm::vec3(0.0f, 0.0f, 50.0f) // Posicion
+    );
 }

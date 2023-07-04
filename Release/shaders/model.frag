@@ -8,7 +8,7 @@ uniform sampler2D u_Diffuse_0;
 #ifndef NO_SPECULAR
 uniform sampler2D u_Specular_0;
 #endif
-uniform vec4 u_LightColor;
+uniform vec3 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
 
@@ -36,7 +36,7 @@ vec4 pointLight() {
 	return (
 		texture(u_Diffuse_0, TexCoord) *
 		(diffuse * inten + AMBIENT) + specular * inten
-	) * u_LightColor;
+	) * vec4(u_LightColor, 1.0f);
 }
 
 void main() {
