@@ -9,10 +9,11 @@ Light light;
 Objects objects;
 
 void initResources() {
+    /// NOTE: https://tools.wwwtyro.net/space-3d/index.html#animationSpeed=1.9679712676194931&fov=94.95075971890812&nebulae=true&pointStars=true&resolution=512&seed=6ahs2zqo8e80&stars=true&sun=true
     const char* skybox_file_paths[6] = {
-        "img/skybox/right.jpg", "img/skybox/left.jpg",
-        "img/skybox/top.jpg",   "img/skybox/bottom.jpg",
-        "img/skybox/front.jpg", "img/skybox/back.jpg",
+        "img/galaxy/right.jpg", "img/galaxy/left.jpg",
+        "img/galaxy/top.jpg",   "img/galaxy/bottom.jpg",
+        "img/galaxy/front.jpg", "img/galaxy/back.jpg",
     };
 
     constexpr GLfloat skybox_vert[] = {

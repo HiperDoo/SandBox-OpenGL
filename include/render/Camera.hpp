@@ -10,31 +10,40 @@
 class Camera {
 private:
 	//=====>>> Variables Privadas
-    int width, height;
-    float speed, sensitivity;
+    glm::vec3 worldUp;
+    glm::vec3 front;
+    glm::vec3 right;
+    glm::vec3 up;
 
-    bool firstClick;
+    // Las tres rotaciones que puede tener un
+    // objeto tridimencional en su propio punto.
+    GLfloat pitch, yaw, roll;
+
+    GLfloat speed, sensitivity, zoom;
+    GLfloat aspect_ratio, fov_deg;
+    GLboolean first_click;
+
+    //=====>>> Funciones Privadas
+    inline float radians(const float degrees) {
+        static constexpr float halfC = M_PI / 180.0f;
+        return degrees * halfC;
+    }
 
 public:
     //=====>>> Variables Publicas
-    glm::vec3 position;
-    glm::vec3 orientation;
-    glm::vec3 up;
-
-    glm::mat4 view;
-    glm::mat4 projection;
+    glm::mat4 projection, view; // Para el skybox
     glm::mat4 matrix;
-
-    float aspect_ratio;
-    float fov_deg;
+    glm::vec3 position;
 
     //=====>>> Constructor y Destructor
-    Camera(const int width, const int height, const float fovDeg, const glm::vec3 position);
+    /// NOTE: https://learnopengl.com/Getting-started/Camera
+    Camera(const glm::vec3& pos, const GLfloat fovDeg);
     ~Camera();
 
     //=====>>> Funciones
-    void updateMatrix();
+    void updateAspectRatio();
     void inputs();
+    void updateMatrix();
 };
 
 #endif

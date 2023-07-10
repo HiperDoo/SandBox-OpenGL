@@ -7,6 +7,22 @@ template <int T> Mesh<T>::Mesh() : u_camera(0), u_cameraPos(0),
 
 template <int T> Mesh<T>::~Mesh() {}
 
+/*
+    NOTE: La creacion y cargado de objetos sera definido en un archivo .conf, el cual
+    sera leido basado del Diccionario Estatico/Dinamico.
+
+    NOTE: Averiguar porque al mover rapidamente la camara, el Skybox se ve cortado por un frame.
+    Esto al parecer no afecta a otros elementos visuales, por lo que podria tratarse de un problema
+    de shaders, actualizacion de la camara, etc...
+    Tambien verificar si esto pasa en Windows.
+
+    TexCoord = vec3(aPos.x, aPos.y, -aPos.z);
+                    vs
+    TexCoord = vec3(aPos);
+
+    o a lo mejor estoy bien ciego, probar con otro cubemap.
+*/
+
 //=====>>> Funciones
 template <int T>
 void Mesh<T>::loadMesh(const char* file_path, const char* vertex_path, const char* fragment_path,

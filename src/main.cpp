@@ -6,14 +6,6 @@ extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 #endif
 
-GLFWwindow* window{nullptr};
-char* window_name{nullptr};
-int screen_width{720};
-int screen_height{480};
-
-io::Shader_Buffer shader_buff;
-io::Vertex_Buffer vertex_buff;
-
 int main(void) {
     std::ios_base::sync_with_stdio(false);
     
@@ -27,7 +19,7 @@ int main(void) {
             char env[] = "DRI_PRIME=1";
             putenv(env);
         } catch (...) {
-            cmd::console_print(cmd::server, cmd::error,
+            cmd::console_print(cmd::client, cmd::warn,
                 "Falla al elegir GPU dedicada del sistema (Error: DRI_PRIME=1).");
         }
         #endif
@@ -36,24 +28,24 @@ int main(void) {
         run_program();
         shut_down();
 
-        cmd::console_print(cmd::server, cmd::debug,
+        cmd::console_print(cmd::client, cmd::debug,
             "Programa finalizado de forma exitosa :>");
         
         return EXIT_SUCCESS;
     } catch (const std::system_error& e) {
-        cmd::console_print(cmd::server, cmd::error,
+        cmd::console_print(cmd::client, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
 
         exit_code = EXIT_FAILURE;
     } catch (const std::exception& e) {
-        cmd::console_print(cmd::server, cmd::error,
+        cmd::console_print(cmd::client, cmd::error,
             "Ha ocurrido un error: {}.", e.what());
 
         exit_code = EXIT_FAILURE;
     } catch (const int e) {
         exit_code = e;
     } catch (...) {
-        cmd::console_print(cmd::server, cmd::error,
+        cmd::console_print(cmd::client, cmd::error,
             "Ha ocurrido un error desconocido (posiblemente de un agente de 3ros)");
 
         exit_code = EXIT_FAILURE;
@@ -61,8 +53,8 @@ int main(void) {
 
     shut_down();
 
-    cmd::console_print(cmd::server, cmd::debug,
-        "Presione Enter para salir...");
+    cmd::console_print(cmd::client, cmd::debug,
+        "Presione \"Enter\" para salir...");
     getchar();
 
     return exit_code;

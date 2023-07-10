@@ -53,7 +53,7 @@ void Texture<T>::loadImage(const char* file_path, const GLenum internat_format, 
 	stbi_set_flip_vertically_on_load(1);
 	buffer = stbi_load(file_path, &width, &height, &BPP, 4);
 	if (!buffer) {
-		cmd::console_print(cmd::server, cmd::error,
+		cmd::console_print(cmd::client, cmd::error,
             "Falla al abrir imagen (archivo: '{}').", file_path);
 		throw 1;
 	}
@@ -84,7 +84,7 @@ void Texture<T>::loadImageMipMap(const char* file_path, const GLsizei depth, con
 	stbi_set_flip_vertically_on_load(1);
 	buffer = stbi_load(file_path, &width, &height, &BPP, 4);
 	if (!buffer) {
-		cmd::console_print(cmd::server, cmd::error,
+		cmd::console_print(cmd::client, cmd::error,
             "Falla al abrir imagen (archivo: '{}').", file_path);
 		throw 1;
 	}
@@ -128,12 +128,12 @@ void Texture<T>::loadImagesCubeMap(const char** file_paths, const GLenum min_fil
 		buffer = stbi_load(file_paths[i], &curr_width, &curr_height, &BPP, 0);
 		stbi_set_flip_vertically_on_load(false);
 		if (!buffer) {
-			cmd::console_print(cmd::server, cmd::error,
+			cmd::console_print(cmd::client, cmd::error,
 				"Falla al abrir imagen (archivo: '{}').", file_paths[i]);
 			throw 1;
 		}
 		if (width != curr_width && height != curr_height) {
-			cmd::console_print(cmd::server, cmd::error,
+			cmd::console_print(cmd::client, cmd::error,
 				"Todas los tamanos de las imagenes del CubeMap deben ser iguales.");
 			throw 1;
 		}

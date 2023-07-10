@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-Camera camera(screen_width, screen_height, 45.0f, glm::vec3(0.0f, 0.0f, 2.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 2.0f), 45.0f);
 
 /*void renderSkyBox() {
     glm::mat4 view = glm::mat4(glm::mat3(camera.view));
