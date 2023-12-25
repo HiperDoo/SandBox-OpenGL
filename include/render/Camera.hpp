@@ -1,6 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
-
+#pragma once
 #include "Global.hpp"
 #include "Shader.hpp"
 
@@ -9,7 +7,6 @@
 
 class Camera {
 private:
-	//=====>>> Variables Privadas
     glm::vec3 worldUp;
     glm::vec3 front;
     glm::vec3 right;
@@ -23,27 +20,21 @@ private:
     GLfloat aspect_ratio, fov_deg;
     GLboolean first_click;
 
-    //=====>>> Funciones Privadas
     inline float radians(const float degrees) {
         static constexpr float halfC = M_PI / 180.0f;
         return degrees * halfC;
     }
 
 public:
-    //=====>>> Variables Publicas
     glm::mat4 projection, view; // Para el skybox
     glm::mat4 matrix;
     glm::vec3 position;
 
-    //=====>>> Constructor y Destructor
     /// NOTE: https://learnopengl.com/Getting-started/Camera
     Camera(const glm::vec3& pos, const GLfloat fovDeg);
     ~Camera();
 
-    //=====>>> Funciones
     void updateAspectRatio();
     void inputs();
     void updateMatrix();
 };
-
-#endif

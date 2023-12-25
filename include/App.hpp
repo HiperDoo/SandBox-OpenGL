@@ -1,10 +1,5 @@
-#ifndef APP_HPP
-#define APP_HPP
-
+#pragma once
 #include "Renderer.hpp"
-
-#define OPENGL_VERSION_MAJOR 4
-#define OPENGL_VERSION_MINOR 5
 
 //=================
 // OPENGL CALLBACKS
@@ -41,85 +36,103 @@ void MouseScrollCallback(GLFWwindow*, double posX, double posY) {
     mouse::scrollY = static_cast<int32_t>(posY);
 }
 
-void ErrorCallback(int, const char *err_str) {
+void ErrorCallback(int, const char* err_str) {
     cmd::console_print(cmd::opengl, cmd::error, err_str);
     throw EXIT_FAILURE;
 }
 
 //===================
-// APLICACION GENERAL
+// APLICACIÓN GENERAL
 //===================
 void update_game();
 void fixed_update_game();
 void render_game();
 
 void init_GLFW() {
-    ms::Timer clock;
+    // Temporizador para toda la inicialización de la ventana de OpenGL.
+    ms::Timer t_initWindow;
+
+    // Definir que función llamar cuando un error de OpenGL se produce.
     glfwSetErrorCallback(ErrorCallback);
 
-    if (!glfwInit()) {
+    // Inicialización de GLFW.
+    if (glfwInit() != GLFW_TRUE) {
         cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado inicializar GLFW.");
+            "No se ha logrado inicializar GLFW."
+        );
         throw EXIT_FAILURE;
     }
 
+    // Parámetros de sugerencia para la ventana a crear (es posible que una plataforma adopte diferentes parámetros).
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Ventana flotante para WMs de Linux
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Ventana flotante para WMs de Linux.
 
-    window::name = new char[32];
+    // Seteo del nombre de la ventana.
+    window::name = new char[64];
     strcpy(window::name, "SandBox OpenGL | fps: 60.0");
+
+    // Creación de la ventana OpenGL.
     window::glfw = glfwCreateWindow(window::width, window::height, window::name, nullptr, nullptr);
     if (!window::glfw) {
         cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado crear la ventana.");
+            "No se ha logrado crear la ventana."
+        );
         glfwTerminate();
         throw EXIT_FAILURE;
     }
-
     glfwMakeContextCurrent(window::glfw);
+
+    // Definir la tasa de refresco de la ventana (en este caso sin limites ya que nosotros nos encargaremos de eso manualmente).
     glfwSwapInterval(0);
 
+    // Inicialización de GLEW (siempre después de inicializar GLFW).
     if (glewInit() != GLEW_OK) {
         cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado inicializar GLEW.");
+            "No se ha logrado inicializar GLEW."
+        );
         throw EXIT_FAILURE;
     }
 
+    // Buscar cual es la tasa de refresco del monitor por defecto.
     delta::default_frame_rate = static_cast<double>(glfwGetVideoMode(glfwGetPrimaryMonitor())->refreshRate);
 
     pc::get_pc_data();
 
-    // Callbacks de OpenGL
+    // Definir las funciones a llamar según cada evento que pueda producirse (callbacks).
     glfwSetFramebufferSizeCallback(window::glfw, FramebufferSizeCallback);
     //glfwSetCursorPosCallback(window::glfw, CursorPosCallback);
     glfwSetScrollCallback(window::glfw, MouseScrollCallback);
 
+    // Define el tamaño y punto del área donde se renderiza nuestro contexto.
     glViewport(0, 0, window::width, window::height);
+
     cmd::console_print(cmd::client, cmd::debug,
-        "CREACION Y CONFIGURACION DE VENTANA OPENGL ({} secs)", clock.tock().count() / 1000.0f);
+        "CREACION Y CONFIGURACION DE VENTANA OPENGL ({} secs)",
+        t_initWindow.tock().count() / 1000.0f
+    );
 }
 
 static float test_rotation{0.0f};
 
 void run_program() {
-    // Inicializar objetos graficos.
+    // Inicialización de todos los objetos/texturas.
     initResources();
-    // Desalojar buffers.
+    // Desalojar buffers de uso común (en este caso, ya no se volverán a usar).
     vertex_buff.destroyBuffer();
     shader_buff.destroyBuffer();
 
-    // Activacion de la funcion Blend para asi renderizar imagenes/texturas con transparencia.
+    // Activación de la función Blend para así renderizar imágenes/texturas con transparencia.
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Respetar la posicion de profundidad de cada objeto renderizado.
+    // Respetar la posición de profundidad de cada objeto renderizado.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    // Evitar renderizar triangulos que no apuntan a la camara.
+    // Evitar renderizar triángulos que no miran hacia la cámara.
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
-    delta::set_FPS(delta::FrameRate::_75_FPS);
+    delta::set_FPS(delta::FrameRate::VSYNC);
 
     //
     ////
@@ -129,7 +142,7 @@ void run_program() {
 
         /// Frame Rate Update
         // - Zona para actualizar funciones cada fotograma (FPS),
-        // como inputs del usuario y calculo de posicionamiento de
+        // como inputs del usuario y cálculo de posicionamiento de
         // animaciones (usando Delta Time).
         //
         // NOTA: Se ejecuta una vez cada fotograma
@@ -137,8 +150,8 @@ void run_program() {
         update_game();
 
         /// Fixed Time Step [20 TPS]
-        // - Loop para actualizar fisicas del juego en su
-        // presiso tiempo (NO usar Delta Time).
+        // - Loop para actualizar físicas del juego en su
+        // preciso tiempo (NO usar Delta Time).
         //
         // NOTA: Se ejecuta una vez cada tick (sin importar los FPS)
         // (20 TPS == 20 actualizaciones por segundo)
@@ -151,7 +164,7 @@ void run_program() {
         // - Zona para renderizar todo aquello pre-calculado.
         render_game();
 
-        // Si sobra tiempo, dormir CPU hasta el siguiente Frame.
+        // Si sobra tiempo, dormir la CPU hasta el siguiente Frame.
         delta::sleep_thread();
     }
 }
@@ -184,7 +197,6 @@ void render_game() {
 
 void shut_down() {
     glfwTerminate();
-    delete[] window::name;
+    if (window::name)
+        delete[] window::name;
 }
-
-#endif

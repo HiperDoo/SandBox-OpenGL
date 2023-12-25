@@ -13,7 +13,7 @@ Texture<T>::~Texture() { glDeleteTextures(1, &program_id); }
 //=====>>> Funciones Privadas
 template <GLenum T>
 void Texture<T>::setSizeFilter(const GLenum min_filter, const GLenum mag_filter) const {
-	// Encargado de definir cual de los dos filtros (GL_NEAREST y GL_LINEAR) se aplicara
+	// Encargado de definir cuál de los dos filtros (GL_NEAREST y GL_LINEAR) se aplicará
 	// ya sea al momento de escalar hacia arriba o hacia abajo.
 	glTextureParameteri(program_id, GL_TEXTURE_MIN_FILTER, min_filter);
 	glTextureParameteri(program_id, GL_TEXTURE_MAG_FILTER, mag_filter);
@@ -22,7 +22,7 @@ void Texture<T>::setSizeFilter(const GLenum min_filter, const GLenum mag_filter)
 template <GLenum T>
 void Texture<T>::setWrapFilter(const GLenum filter) const {
 	// Encargado de definir el comportamiento del renderizado de la textura cuando
-	// este excede su zona (0,0 - 1,1). Afecta al rededor de la textura y no internamente.
+	// este excede su zona (0,0 - 1,1). Afecta alrededor de la textura y no internamente.
 	if (T == GL_TEXTURE_2D) {
 		glTextureParameteri(program_id, GL_TEXTURE_WRAP_S, filter);
 		glTextureParameteri(program_id, GL_TEXTURE_WRAP_T, filter);
@@ -34,34 +34,28 @@ void Texture<T>::setWrapFilter(const GLenum filter) const {
 }
 
 //=====>>> Funciones
-template <GLenum T>
-void Texture<T>::bind() const {
-	glBindTexture(T, program_id);
-}
-
-template <GLenum T>
-void Texture<T>::bind(GLenum slot) const {
-	glBindTextureUnit(slot, program_id);
-}
+template <GLenum T> void Texture<T>::bind() const { glBindTexture(T, program_id); }
+template <GLenum T> void Texture<T>::bind(GLenum slot) const { glBindTextureUnit(slot, program_id); }
 
 template <GLenum T>
 void Texture<T>::loadImage(const char* file_path, const GLenum internat_format, const GLenum format,
 	const GLenum min_filter, const GLenum mag_filter, const GLenum filter) {
-	unsigned char* buffer{nullptr};
-	int width{0}, height{0}, BPP{0};
-
 	stbi_set_flip_vertically_on_load(1);
-	buffer = stbi_load(file_path, &width, &height, &BPP, 4);
+	
+	int width{0}, height{0}, BPP{0};
+	unsigned char* buffer = stbi_load(file_path, &width, &height, &BPP, 4);
 	if (!buffer) {
 		cmd::console_print(cmd::client, cmd::error,
-            "Falla al abrir imagen (archivo: '{}').", file_path);
+            "Falla al abrir imagen (archivo: '{}').",
+			file_path
+		);
 		throw 1;
 	}
 
     glCreateTextures(T, 1, &program_id);
 
-	// glTextureStorage#D cumple el mismo proposito que glTexImage#D, solo que con un tamano
-	// fijo y estatico (mas eficiente cuando se trata de tamanos ^2).
+	// glTextureStorage#D cumple el mismo propósito que glTexImage#D, solo que con un tamaño
+	// fijo y estático (más eficiente cuando se trata de tamaños ^2).
 	if (T == GL_TEXTURE_2D) {
 		glTextureStorage2D(program_id, 1, internat_format, width, height);
 		glTextureSubImage2D(program_id, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, buffer);
@@ -78,23 +72,21 @@ void Texture<T>::loadImage(const char* file_path, const GLenum internat_format, 
 template <GLenum T>
 void Texture<T>::loadImageMipMap(const char* file_path, const GLsizei depth, const GLenum slot,
 	const GLenum min_filter, const GLenum mag_filter, const GLenum filter) {
-	unsigned char* buffer{nullptr};
-	int width{0}, height{0}, BPP{0};
-
 	stbi_set_flip_vertically_on_load(1);
-	buffer = stbi_load(file_path, &width, &height, &BPP, 4);
+
+	int width{0}, height{0}, BPP{0};
+	unsigned char* buffer = stbi_load(file_path, &width, &height, &BPP, 4);
 	if (!buffer) {
 		cmd::console_print(cmd::client, cmd::error,
-            "Falla al abrir imagen (archivo: '{}').", file_path);
+            "Falla al abrir imagen (archivo: '{}').",
+			file_path
+		);
 		throw 1;
 	}
 
     GLsizei levels{1};
-	// TODO: describir exactamente que hace que cosa
     height /= depth;
-    //TODO: Averiguar que raios hace esto???
     while ((width | height) >> levels) levels++;
-    //while ((width | height | depth) >> levels) levels++;
 
     glCreateTextures(T, 1, &program_id);
 
@@ -129,12 +121,15 @@ void Texture<T>::loadImagesCubeMap(const char** file_paths, const GLenum min_fil
 		stbi_set_flip_vertically_on_load(false);
 		if (!buffer) {
 			cmd::console_print(cmd::client, cmd::error,
-				"Falla al abrir imagen (archivo: '{}').", file_paths[i]);
+				"Falla al abrir imagen (archivo: '{}').",
+				file_paths[i]
+			);
 			throw 1;
 		}
 		if (width != curr_width && height != curr_height) {
 			cmd::console_print(cmd::client, cmd::error,
-				"Todas los tamanos de las imagenes del CubeMap deben ser iguales.");
+				"Todas los tamanos de las imagenes del CubeMap deben ser iguales."
+			);
 			throw 1;
 		}
 

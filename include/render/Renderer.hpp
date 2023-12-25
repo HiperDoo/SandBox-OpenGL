@@ -1,6 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
-
+#pragma once
 #include "Resources.hpp"
 #include "Camera.hpp"
 
@@ -19,5 +17,3 @@ extern void renderLight();
 extern void renderSword(const float rotation);*/
 
 extern void renderer(const float rotation);
-
-#endif

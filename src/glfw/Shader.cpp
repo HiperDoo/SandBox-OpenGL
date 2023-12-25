@@ -26,9 +26,8 @@ GLint Shader::compileShader(const char* file_path, GLenum type) {
 }
 
 //=====>>> Funciones
-void Shader::initShader(const char* vertex_path, const char* fragment_path,
-    const unsigned int offset) {
-    // Copia de los archivos vertex y fragment en un buffer para luego ser compilados
+void Shader::initShader(const char* vertex_path, const char* fragment_path, const unsigned int offset) {
+    // Copia de los archivos vertex y fragment en un buffer para luego ser compilados.
     shader_buff.load_from_file(vertex_path, offset);
     GLint vs = compileShader(vertex_path, GL_VERTEX_SHADER);
     shader_buff.load_from_file(fragment_path, offset);
@@ -36,7 +35,7 @@ void Shader::initShader(const char* vertex_path, const char* fragment_path,
 
     program_id = glCreateProgram();
     
-    // Se enlazan ambos programas en uno solo, un shader completo
+    // Se enlazan ambos programas en uno solo, un shader completo.
     glAttachShader(program_id, vs);
     glAttachShader(program_id, fs);
     glLinkProgram(program_id);
@@ -54,7 +53,9 @@ GLint Shader::getUniformLocation(const char* name) const {
     GLint location = glGetUniformLocation(program_id, name);
     if (location == -1) {
         cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha encontrado el uniforme '{}'.", name);
+            "No se ha encontrado el uniforme '{}'.",
+            name
+        );
         throw 1;
     }
     return location;

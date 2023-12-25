@@ -1,5 +1,13 @@
 #include "Utilities.hpp"
 
+#include <GL/glew.h>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/sysinfo.h>
+#include <sys/ioctl.h>
+#endif
+
 //=============
 // FILE MANAGER
 //=============
@@ -153,7 +161,7 @@ namespace pc {
 
         // Obtener disponibilidad de Instrucciones SSE
         CPUID(1, 0);
-        HTT   = EDX & AVX_POS;
+        HTT = EDX & AVX_POS;
         cpu |= !!(EDX & SSE_POS) << 0
             | !!(EDX & SSE2_POS) << 1
             | !!(ECX & SSE3_POS) << 2
@@ -215,7 +223,7 @@ namespace pc {
         }
 
         // Obtener nombre de CPU
-        for(int i = 0, j = 0; i < 3; i++, j = i << 4) {
+        for (int i = 0, j = 0; i < 3; i++, j = i << 4) {
             CPUID(i + 0x80000002, 0);
             *reinterpret_cast<uint32_t*>(model_name + j) = EAX;
             *reinterpret_cast<uint32_t*>(model_name + j + 4) = EBX;

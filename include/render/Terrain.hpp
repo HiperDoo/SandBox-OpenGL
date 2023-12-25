@@ -1,6 +1,4 @@
-#ifndef TERRAIN_HPP
-#define TERRAIN_HPP
-
+#pragma once
 class Terrain {
 private:
     //=====>>> Variables Privadas
@@ -16,5 +14,3 @@ public:
     //=====>>> Funciones
     void generateTerrain();
 };
-
-#endif

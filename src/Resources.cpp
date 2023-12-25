@@ -61,40 +61,40 @@ void initResources() {
     };
 
     constexpr GLfloat piramid_vert[] = {
-        // COORDINATES          / TEXCOORDS      / NORMALS
-        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-        -0.5f, 0.0f, -0.5f,     0.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-         0.5f, 0.0f, -0.5f,     5.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+        // COORDENADAS          // TEXCOORDS     // NORMALES
+        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Lado Inferior
+        -0.5f, 0.0f, -0.5f,     0.0f, 5.0f,      0.0f, -1.0f, 0.0f,
+         0.5f, 0.0f, -0.5f,     5.0f, 5.0f,      0.0f, -1.0f, 0.0f,
+         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.0f, -1.0f, 0.0f,
 
-        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-        -0.5f, 0.0f, -0.5f,     5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Lado Izquierdo
+        -0.5f, 0.0f, -0.5f,     5.0f, 0.0f,     -0.8f, 0.5f,  0.0f,
+         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,     -0.8f, 0.5f,  0.0f,
 
-        -0.5f, 0.0f, -0.5f,     5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-         0.5f, 0.0f, -0.5f,     0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+        -0.5f, 0.0f, -0.5f,     5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Lado Trasero
+         0.5f, 0.0f, -0.5f,     0.0f, 0.0f,      0.0f, 0.5f, -0.8f,
+         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.0f, 0.5f, -0.8f,
 
-         0.5f, 0.0f, -0.5f,     0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
+         0.5f, 0.0f, -0.5f,     0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Lado Derecho
+         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.8f, 0.5f,  0.0f,
+         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.8f, 0.5f,  0.0f,
 
-         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
+         0.5f, 0.0f,  0.5f,     5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // De Frente
+        -0.5f, 0.0f,  0.5f,     0.0f, 0.0f,      0.0f, 0.5f,  0.8f,
+         0.0f, 0.8f,  0.0f,     2.5f, 5.0f,      0.0f, 0.5f,  0.8f
     };
 
     constexpr GLuint piramid_indi[] = {
-        0, 1, 2,    // Bottom side
-        0, 2, 3,    // Bottom side
-        4, 6, 5,    // Left side
-        7, 9, 8,    // Non-facing side
-        10, 12, 11, // Right side
-        13, 15, 14  // Facing side
+        0, 1, 2,    // Lado Inferior
+        0, 2, 3,
+        4, 6, 5,    // Lado Izquierdo
+        7, 9, 8,    // Lado Trasero
+        10, 12, 11, // Lado Derecho
+        13, 15, 14  // De Frente
     };
 
     constexpr GLfloat w_floor_vert[] = {
-        // COORDINATES          / TEXCOORDS     / NORMALS
+        // COORDENADAS          // TEXCOORDS    // NORMALES
         -1.0f, 0.0f,  1.0f,     0.0f, 0.0f,     0.0f, 1.0f, 0.0f,
         -1.0f, 0.0f, -1.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
          1.0f, 0.0f, -1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
@@ -133,7 +133,7 @@ void initResources() {
     };
 
 
-    ////////// Inicializacion de todos los shaders (tanto vertex como fragment shaders)
+    ////////// Inicialización de todos los shaders (tanto vertex como fragment shaders).
     skybox.shader.initShader("shaders/skybox.vert", "shaders/skybox.frag");
     cpp_img.shader.initShader("shaders/cpp.vert", "shaders/cpp.frag");
     piramid.shader.initShader("shaders/piramid.vert", "shaders/piramid.frag");
@@ -141,8 +141,7 @@ void initResources() {
     light.shader.initShader("shaders/light.vert", "shaders/light.frag");
 
 
-    // Se obtienen todos los uniforms (variables globales que se usan dentro de los shaders),
-	// para tener un facil acceso directo.
+    // Se obtienen todos los uniforms (variables globales que se usan dentro de los shaders), para tener un fácil acceso directo.
     skybox.u_view = skybox.shader.getUniformLocation("u_View");
     skybox.u_projection = skybox.shader.getUniformLocation("u_Projection");
 
@@ -165,54 +164,69 @@ void initResources() {
     light.u_lightColor = light.shader.getUniformLocation("u_LightColor");
 
 
-    ////////// Inicializacion de todas las texturas (obtenidas de sus respectivos archivos)
-    skybox.texture.loadImagesCubeMap(skybox_file_paths,
-        GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
+    ////////// Inicialización de todas las texturas (obtenidas de sus respectivos archivos).
+    skybox.texture.loadImagesCubeMap(
+        skybox_file_paths,
+        GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE
+    );
 
-    cpp_img.texture.loadImage("img/cpp.png",
+    cpp_img.texture.loadImage(
+        "img/cpp.png",
         GL_RGBA8, GL_RGBA,
-        GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
+        GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE
+    );
 
-    piramid.texture.loadImage("img/brick.png",
+    piramid.texture.loadImage(
+        "img/brick.png",
         GL_RGBA8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT
+    );
 
-    w_floor.texture.loadImage("img/planks.png",
+    w_floor.texture.loadImage(
+        "img/planks.png",
         GL_RGBA8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
-    w_floor.specular.loadImage("img/planksSpec.png",
+        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT
+    );
+    w_floor.specular.loadImage(
+        "img/planksSpec.png",
         GL_R8, GL_RGBA,
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT);
+        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST, GL_REPEAT
+    );
 
 
-    ////////// Inicializacion de todos los objetos de vertices
+    ////////// Inicialización de todos los objetos de vértices.
     skybox.vertexObj.initObject(
         skybox_vert, sizeof(skybox_vert),
-        skybox_indi, sizeof(skybox_indi));
+        skybox_indi, sizeof(skybox_indi)
+    );
     skybox.vertexObj.setAttributes(ATTR_POSITION, 3);
 
     cpp_img.vertexObj.initObject(
         cpp_vert, sizeof(cpp_vert),
-        cpp_indi, sizeof(cpp_indi));
+        cpp_indi, sizeof(cpp_indi)
+    );
     cpp_img.vertexObj.setAttributes(ATTR_POSITION, 2, ATTR_TEXCOORD, 2);
 
     piramid.vertexObj.initObject(
         piramid_vert, sizeof(piramid_vert),
-        piramid_indi, sizeof(piramid_indi));
+        piramid_indi, sizeof(piramid_indi)
+    );
     piramid.vertexObj.setAttributes(ATTR_POSITION, 3, ATTR_TEXCOORD, 2, ATTR_NORMAL, 3);
 
     w_floor.vertexObj.initObject(
         w_floor_vert, sizeof(w_floor_vert),
-        w_floor_indi, sizeof(w_floor_indi));
+        w_floor_indi, sizeof(w_floor_indi)
+    );
     w_floor.vertexObj.setAttributes(ATTR_POSITION, 3, ATTR_TEXCOORD, 2, ATTR_NORMAL, 3);
 
     light.vertexObj.initObject(
         light_vert, sizeof(light_vert),
-        light_indi, sizeof(light_indi));
+        light_indi, sizeof(light_indi)
+    );
     light.vertexObj.setAttributes(ATTR_POSITION, 3);
 
 
-    ////////// Inicializacion de meshes (objetos)
+    ////////// Inicialización de meshes (objetos).
     // TODO: Hacer un personaje tipo '256 fes', el cual tendra una especie de caja
     // lleno de cosas que caracterise a C++ (mejorar idea...)
     objects.init(1, 2, 0);
@@ -239,7 +253,7 @@ void initResources() {
     );
 
 
-    ////////// Inicializacion de uniforms constantes
+    ////////// Inicialización de uniforms constantes.
     // TODO: mejorar el sistema de posicionamiento de objetos, demasiado hardcode aqui
     glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);

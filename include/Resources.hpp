@@ -1,6 +1,4 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
-
+#pragma once
 #include "Mesh.hpp"
 
 struct Skybox {
@@ -44,10 +42,8 @@ extern Wood_Floor w_floor;
 extern Light light;
 
 
-// Necesario Definir antes de instanciar (usar)
+// Necesario Definir antes de instanciar (usar).
 class Objects;
 extern Objects objects;
 
 void initResources();
-
-#endif

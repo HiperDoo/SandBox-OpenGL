@@ -56,23 +56,23 @@ void Camera::inputs() {
     zoom = zoom > 45 ? 45 : zoom;
     
     const float velocity{speed * delta::dt};
-    if (glfwGetKey(window::glfw, GLFW_KEY_W) == GLFW_PRESS) // Delante
+    if (glfwGetKey(window::glfw, GLFW_KEY_W) == GLFW_PRESS)             // Delante
         position += front * velocity;
-    else if (glfwGetKey(window::glfw, GLFW_KEY_S) == GLFW_PRESS) // Atras
+    else if (glfwGetKey(window::glfw, GLFW_KEY_S) == GLFW_PRESS)        // Atrás
         position -= front * velocity;
         
-    if (glfwGetKey(window::glfw, GLFW_KEY_D) == GLFW_PRESS) // Derecha
+    if (glfwGetKey(window::glfw, GLFW_KEY_D) == GLFW_PRESS)             // Derecha
         position += right * velocity;
-    if (glfwGetKey(window::glfw, GLFW_KEY_A) == GLFW_PRESS) // Izquierda
+    if (glfwGetKey(window::glfw, GLFW_KEY_A) == GLFW_PRESS)             // Izquierda
         position -= right * velocity;
 
-    if (glfwGetKey(window::glfw, GLFW_KEY_SPACE) == GLFW_PRESS) // Arriba
+    if (glfwGetKey(window::glfw, GLFW_KEY_SPACE) == GLFW_PRESS)         // Arriba
         position += up * velocity;
-    if (glfwGetKey(window::glfw, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) // Abajo
+    if (glfwGetKey(window::glfw, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)    // Abajo
         position -= up * velocity;
-    if (glfwGetKey(window::glfw, GLFW_KEY_TAB) == GLFW_PRESS) // Rapido
+    if (glfwGetKey(window::glfw, GLFW_KEY_TAB) == GLFW_PRESS)           // Rápido
         speed = 10.0f;
-    else if (glfwGetKey(window::glfw, GLFW_KEY_D) == GLFW_RELEASE) // Normal
+    else if (glfwGetKey(window::glfw, GLFW_KEY_D) == GLFW_RELEASE)      // Normal
         speed = 2.5f;
 }
 

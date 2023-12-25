@@ -69,7 +69,7 @@ void Mesh<T>::loadMesh(const char* file_path, const char* vertex_path, const cha
     }
 
 
-    // Inicializar vertices del objeto
+    // Inicializar vértices del objeto.
     object.initObject(
         (float*)(vertex_buff.data + ranges.vert_start), ranges.vert_offset,
         (GLuint*)(vertex_buff.data + ranges.indi_start), ranges.indi_offset);
@@ -77,7 +77,7 @@ void Mesh<T>::loadMesh(const char* file_path, const char* vertex_path, const cha
     else        object.setAttributes(ATTR_POSITION, types.pos, ATTR_TEXCOORD, types.uvs, ATTR_NORMAL, types.norm);
 
 
-    // Transformar matrix del modelo
+    // Transformar matrix del modelo.
     position = pos; rotation = rot; scale = sca;
     matrix = glm::translate(matrix, pos);
     matrix = glm::rotate(matrix, glm::radians(0.0f), rot);

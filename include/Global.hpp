@@ -1,6 +1,4 @@
-#ifndef GLOBAL_HPP
-#define GLOBAL_HPP
-
+#pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -15,6 +13,9 @@
 #include <thread>
 
 #include "Utilities.hpp"
+
+#define OPENGL_VERSION_MAJOR 4
+#define OPENGL_VERSION_MINOR 5
 
 namespace window {
     extern GLFWwindow* glfw;
@@ -81,5 +82,3 @@ namespace mouse {
 
 extern io::Shader_Buffer shader_buff;
 extern io::Vertex_Buffer vertex_buff;
-
-#endif

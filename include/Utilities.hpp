@@ -1,6 +1,4 @@
-#ifndef UTILITIES_HPP
-#define UTILITIES_HPP
-
+#pragma once
 #include <fmt/core.h>
 #include <fmt/color.h>
 #include <fmt/chrono.h>
@@ -119,17 +117,7 @@ namespace cmd {
 //========================
 // GET HARDWARE & SOFTWARE
 //========================
-#include <GL/glew.h>
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <sys/sysinfo.h>
-#include <sys/ioctl.h>
-#endif
-
 namespace pc {
     void get_terminal_size(uint32_t& width);
     void get_pc_data();
 }
-
-#endif
