@@ -114,4 +114,6 @@ void renderer(const float rotation) {
     glEnable(GL_CULL_FACE);
     objects.render();
     glDisable(GL_CULL_FACE);
+
+    ground.render();
 }

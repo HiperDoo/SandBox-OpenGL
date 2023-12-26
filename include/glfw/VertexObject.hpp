@@ -85,6 +85,7 @@ public:
 
 	// Une el VAO correspondiente y renderiza.
 	void render() const;
+	void render_dots() const;
 };
 
 

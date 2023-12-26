@@ -19,6 +19,10 @@ void VertexObj::render() const {
     glDrawArrays(GL_TRIANGLES, 0, elements);
 }
 
+void VertexObj::render_dots() const {
+    glBindVertexArray(vao_id);
+    glDrawArrays(GL_POINTS, 0, elements);
+}
 
 //=====>>> Constructor y Destructor
 VertexObjIndex::VertexObjIndex() : ebo_id(0) {}

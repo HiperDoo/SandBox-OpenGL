@@ -6,6 +6,8 @@ Piramid piramid;
 Wood_Floor w_floor;
 Light light;
 
+Terrain ground;
+
 Objects objects;
 
 void initResources() {
@@ -299,4 +301,6 @@ void initResources() {
         glm::vec3(1.0f, 0.0f, 0.0f), // Color
         glm::vec3(0.0f, 0.0f, 50.0f) // Posicion
     );
+
+    ground.load_terrain("models/heightmap.data");
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.hpp"
+#include "Terrain.hpp"
 
 struct Skybox {
     Shader shader;
@@ -40,6 +41,9 @@ extern Cpp_img cpp_img;
 extern Piramid piramid;
 extern Wood_Floor w_floor;
 extern Light light;
+
+class Terrain;
+extern Terrain ground;
 
 
 // Necesario Definir antes de instanciar (usar).

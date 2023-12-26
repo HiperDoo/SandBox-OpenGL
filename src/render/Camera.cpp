@@ -4,7 +4,7 @@
 Camera::Camera(const glm::vec3& pos, const GLfloat fovDeg)
     : worldUp{0.0f, 1.0f, 0.0f}, front{0.0f, 0.0f, 1.0f}, right{-1.0f, 0.0f, 0.0f}, up{0.0f, 1.0f, 0.0f},
     pitch(0), yaw(90), roll(0), speed(2.5f), sensitivity(100.0f), zoom(45.0f),
-    aspect_ratio((GLfloat)(window::width / window::height)), fov_deg(glm::radians(fovDeg)), first_click(GL_TRUE),
+    aspect_ratio((GLfloat)(window::width) / (GLfloat)window::height), fov_deg(glm::radians(fovDeg)), first_click(GL_TRUE),
     projection(0.0f), view(0.0f), matrix(0.0f), position(pos) {}
 
 
@@ -12,7 +12,7 @@ Camera::~Camera() {}
 
 //=====>>> Funciones
 void Camera::updateAspectRatio() {
-    aspect_ratio = static_cast<GLfloat>(window::width / window::height);
+    aspect_ratio = (GLfloat)window::width / (GLfloat)window::height;
 }
 
 void Camera::inputs() {

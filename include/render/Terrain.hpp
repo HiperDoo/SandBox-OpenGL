@@ -1,16 +1,33 @@
 #pragma once
+#include "Global.hpp"
+#include "VertexObject.hpp"
+#include "Shader.hpp"
+#include "Texture.hpp"
+#include "Renderer.hpp"
+
 class Terrain {
 private:
-    //=====>>> Variables Privadas
+    /*VertexObjIndex object;
+    Texture2D texture;
+
     #define TERRAIN_SIZE 800.0f
     #define VERTEX_COUNT 128
-    float x, y;
+    float x, z;*/
+
+    VertexObjIndex object;
+    Shader shader;
+    GLint u_camera;
+
+    float* height_map_2D;
+    
+    uint32_t terrain_size;
+    float world_scale;
 
 public:
-    //=====>>> Constructor y Destructor
-    Terrain(int gridX, int gridY);
+    Terrain();
     ~Terrain();
 
-    //=====>>> Funciones
-    void generateTerrain();
+    void load_terrain(const char* file_path);
+    
+    void render() const;
 };

@@ -122,6 +122,7 @@ void run_program() {
     // Desalojar buffers de uso común (en este caso, ya no se volverán a usar).
     vertex_buff.destroyBuffer();
     shader_buff.destroyBuffer();
+    general_buff.destroyBuffer();
 
     // Activación de la función Blend para así renderizar imágenes/texturas con transparencia.
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

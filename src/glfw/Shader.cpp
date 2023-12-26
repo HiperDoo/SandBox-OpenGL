@@ -1,5 +1,7 @@
 #include "Shader.hpp"
 
+#include <cstdio>
+
 //=====>>> Constructor y Destructor
 Shader::Shader() : program_id(0) {}
 Shader::~Shader() { if (program_id) glDeleteProgram(program_id); }

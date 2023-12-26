@@ -80,4 +80,5 @@ namespace mouse {
 };
 
 io::Shader_Buffer shader_buff;
-io::Vertex_Buffer vertex_buff;
+io::General_Buffer vertex_buff;
+io::General_Buffer general_buff;

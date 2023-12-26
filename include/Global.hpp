@@ -12,7 +12,9 @@
 #include <chrono>
 #include <thread>
 
-#include "Utilities.hpp"
+#include "LogManager.hpp"
+#include "FileManager.hpp"
+#include "Hardware.hpp"
 
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 5
@@ -66,6 +68,23 @@ namespace delta {
     inline void feedFixedUpdate() { lag_elapsed -= (1.0f / 20.0f); } //target_frame_time
 };
 
+namespace ms {
+    struct Timer {
+        using timep_t = std::chrono::steady_clock;
+        timep_t::time_point start = timep_t::now();
+        timep_t::time_point end = {};
+
+        void tick() { 
+            end = timep_t::time_point{};
+            start = timep_t::now();
+        }
+        
+        auto tock() const {
+            return std::chrono::duration_cast<std::chrono::milliseconds>(timep_t::now() - start);
+        }
+    };
+};
+
 namespace mouse {
     extern int32_t offsetX;
     extern int32_t offsetY;
@@ -81,4 +100,5 @@ namespace mouse {
 };
 
 extern io::Shader_Buffer shader_buff;
-extern io::Vertex_Buffer vertex_buff;
+extern io::General_Buffer vertex_buff;
+extern io::General_Buffer general_buff;
