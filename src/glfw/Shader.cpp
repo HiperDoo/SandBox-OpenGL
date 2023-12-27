@@ -64,8 +64,12 @@ GLint Shader::getUniformLocation(const char* name) const {
 }
 
 // Uniforms con bind
-void Shader::setUniform1i(const GLint location, int value) const {
+void Shader::setUniform1i(const GLint location, const int value) const {
     glProgramUniform1i(program_id, location, value);
+}
+
+void Shader::setUniform1f(const GLint location, const float value) const {
+    glProgramUniform1f(program_id, location, value);
 }
 
 void Shader::setUniformVec3f(const GLint location, const glm::vec3& value) const {

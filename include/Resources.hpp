@@ -43,7 +43,8 @@ extern Wood_Floor w_floor;
 extern Light light;
 
 class Terrain;
-extern Terrain ground;
+class FaultFormation;
+extern FaultFormation ground;
 
 
 // Necesario Definir antes de instanciar (usar).
