@@ -1,6 +1,14 @@
 #pragma once
 #include "Renderer.hpp"
 
+/*
+ * TODO:
+ * > Reparar el sistema de Frame Rate (provoca Screen Tearing).
+ *      glfwSwapInterval(1); como ejemplo a seguir.
+ * > Reforzar el manejo de la ventana de OpenGL (permitiendo de
+ *   manera mas dinamica el cambio de Full Screen y Windored Window).
+ */
+
 //=================
 // OPENGL CALLBACKS
 //=================
@@ -67,7 +75,9 @@ void init_GLFW() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Ventana flotante para WMs de Linux.
+    #ifndef _WIN32
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    #endif
 
     // Seteo del nombre de la ventana.
     window::name = new char[64];
@@ -85,7 +95,12 @@ void init_GLFW() {
     glfwMakeContextCurrent(window::glfw);
 
     // Definir la tasa de refresco de la ventana (en este caso sin limites ya que nosotros nos encargaremos de eso manualmente).
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
+
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    glfwSetWindowMonitor(window::glfw, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+    glViewport(0, 0, mode->width, mode->height);
 
     // Inicialización de GLEW (siempre después de inicializar GLFW).
     if (glewInit() != GLEW_OK) {
@@ -106,7 +121,7 @@ void init_GLFW() {
     glfwSetScrollCallback(window::glfw, MouseScrollCallback);
 
     // Define el tamaño y punto del área donde se renderiza nuestro contexto.
-    glViewport(0, 0, window::width, window::height);
+    //glViewport(0, 0, window::width, window::height);
 
     cmd::console_print(cmd::client, cmd::debug,
         "CREACION Y CONFIGURACION DE VENTANA OPENGL ({} secs)",
@@ -135,11 +150,18 @@ void run_program() {
 
     delta::set_FPS(delta::FrameRate::VSYNC);
 
+    double now_clk{0.0f}, last_clk{0.0f};
+
     //
     ////
     ////// Main Loop de todo el programa.
     while (!glfwWindowShouldClose(window::glfw)) {
-        delta::update_dt();
+        //delta::update_dt();
+
+        now_clk = glfwGetTime();
+        delta::dt = static_cast<float>(now_clk - last_clk);
+        delta::lag_elapsed += now_clk - last_clk;
+        last_clk = now_clk;
 
         /// Frame Rate Update
         // - Zona para actualizar funciones cada fotograma (FPS),
@@ -165,8 +187,8 @@ void run_program() {
         // - Zona para renderizar todo aquello pre-calculado.
         render_game();
 
-        // Si sobra tiempo, dormir la CPU hasta el siguiente Frame.
-        delta::sleep_thread();
+        // Si sobra tiempo, dormir la CPU hasta el siguiente fotograma.
+        //delta::sleep_thread();
     }
 }
 
