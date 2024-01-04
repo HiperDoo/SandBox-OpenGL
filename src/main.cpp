@@ -27,7 +27,7 @@ int main(void) {
         #endif
 
         init_GLFW();
-        run_program();
+        run_game();
 
         cmd::console_print(cmd::client, cmd::debug,
             "Programa finalizado de forma exitosa :>"

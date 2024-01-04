@@ -1,57 +1,11 @@
 #pragma once
 #include "Renderer.hpp"
 
-/*
- * TODO:
- * > Reparar el sistema de Frame Rate (provoca Screen Tearing).
- *      glfwSwapInterval(1); como ejemplo a seguir.
- * > Reforzar el manejo de la ventana de OpenGL (permitiendo de
- *   manera mas dinamica el cambio de Full Screen y Windored Window).
- */
-
-//=================
-// OPENGL CALLBACKS
-//=================
-void FramebufferSizeCallback(GLFWwindow *window, GLsizei width, GLsizei height) {
-    window::width = static_cast<uint32_t>(width);
-    window::height = static_cast<uint32_t>(height);
-    window::half_width = window::width / 2;
-    window::half_height = window::height / 2;
-
-    glViewport(0, 0, window::width, window::height);
-    camera.updateAspectRatio();
-}
-
-void CursorPosCallback(GLFWwindow*, double posX, double posY) {
-    mouse::posX = static_cast<int32_t>(posX);
-    mouse::posY = static_cast<int32_t>(posY);
-
-    if (mouse::first_move) {
-        mouse::lastX = mouse::posX;
-        mouse::lastY = mouse::posY;
-        mouse::first_move = false;
-    }
-
-    mouse::offsetX = mouse::posX - mouse::lastX;
-    mouse::offsetY = mouse::lastY - mouse::posY;
-
-    mouse::lastX = mouse::posX;
-    mouse::lastY = mouse::posY;
-}
-
 void MouseScrollCallback(GLFWwindow*, double posX, double posY) {
     mouse::scrollX = static_cast<int32_t>(posX);
     mouse::scrollY = static_cast<int32_t>(posY);
 }
 
-void ErrorCallback(int, const char* err_str) {
-    cmd::console_print(cmd::opengl, cmd::error, err_str);
-    throw EXIT_FAILURE;
-}
-
-//===================
-// APLICACIÓN GENERAL
-//===================
 void update_game();
 void fixed_update_game();
 void render_game();
@@ -60,108 +14,32 @@ void init_GLFW() {
     // Temporizador para toda la inicialización de la ventana de OpenGL.
     ms::Timer t_initWindow;
 
-    // Definir que función llamar cuando un error de OpenGL se produce.
-    glfwSetErrorCallback(ErrorCallback);
+    app.window_init("SandBox OpenGL | fps: ", 720, 480);
+    app.camera_init(glm::vec3(0.0f, 0.0f, 2.0f), 45.0f);
 
-    // Inicialización de GLFW.
-    if (glfwInit() != GLFW_TRUE) {
-        cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado inicializar GLFW."
-        );
-        throw EXIT_FAILURE;
-    }
-
-    // Parámetros de sugerencia para la ventana a crear (es posible que una plataforma adopte diferentes parámetros).
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    #ifndef _WIN32
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    #endif
-
-    // Seteo del nombre de la ventana.
-    window::name = new char[64];
-    strcpy(window::name, "SandBox OpenGL | fps: 60.0");
-
-    // Creación de la ventana OpenGL.
-    window::glfw = glfwCreateWindow(window::width, window::height, window::name, nullptr, nullptr);
-    if (!window::glfw) {
-        cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado crear la ventana."
-        );
-        glfwTerminate();
-        throw EXIT_FAILURE;
-    }
-    glfwMakeContextCurrent(window::glfw);
-
-    // Definir la tasa de refresco de la ventana (en este caso sin limites ya que nosotros nos encargaremos de eso manualmente).
-    glfwSwapInterval(1);
-
-    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-    glfwSetWindowMonitor(window::glfw, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-    glViewport(0, 0, mode->width, mode->height);
-
-    // Inicialización de GLEW (siempre después de inicializar GLFW).
-    if (glewInit() != GLEW_OK) {
-        cmd::console_print(cmd::opengl, cmd::error,
-            "No se ha logrado inicializar GLEW."
-        );
-        throw EXIT_FAILURE;
-    }
-
-    // Buscar cual es la tasa de refresco del monitor por defecto.
-    delta::default_frame_rate = static_cast<double>(glfwGetVideoMode(glfwGetPrimaryMonitor())->refreshRate);
-
-    pc::get_pc_data();
-
-    // Definir las funciones a llamar según cada evento que pueda producirse (callbacks).
-    glfwSetFramebufferSizeCallback(window::glfw, FramebufferSizeCallback);
-    //glfwSetCursorPosCallback(window::glfw, CursorPosCallback);
-    glfwSetScrollCallback(window::glfw, MouseScrollCallback);
-
-    // Define el tamaño y punto del área donde se renderiza nuestro contexto.
-    //glViewport(0, 0, window::width, window::height);
-
+    glfwSetScrollCallback(app.glfw, MouseScrollCallback);
     cmd::console_print(cmd::client, cmd::debug,
         "CREACION Y CONFIGURACION DE VENTANA OPENGL ({} secs)",
         t_initWindow.tock().count() / 1000.0f
     );
+
+    pc::get_pc_data();
 }
 
-static float test_rotation{0.0f};
-
-void run_program() {
+void run_game() {
     // Inicialización de todos los objetos/texturas.
     initResources();
+
     // Desalojar buffers de uso común (en este caso, ya no se volverán a usar).
     vertex_buff.destroyBuffer();
     shader_buff.destroyBuffer();
     general_buff.destroyBuffer();
 
-    // Activación de la función Blend para así renderizar imágenes/texturas con transparencia.
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Respetar la posición de profundidad de cada objeto renderizado.
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    // Evitar renderizar triángulos que no miran hacia la cámara.
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CCW);
-
-    delta::set_FPS(delta::FrameRate::VSYNC);
-
-    double now_clk{0.0f}, last_clk{0.0f};
-
     //
     ////
     ////// Main Loop de todo el programa.
-    while (!glfwWindowShouldClose(window::glfw)) {
-        //delta::update_dt();
-
-        now_clk = glfwGetTime();
-        delta::dt = static_cast<float>(now_clk - last_clk);
-        delta::lag_elapsed += now_clk - last_clk;
-        last_clk = now_clk;
+    while (!glfwWindowShouldClose(app.glfw)) {
+        app.window_update_clock();
 
         /// Frame Rate Update
         // - Zona para actualizar funciones cada fotograma (FPS),
@@ -178,9 +56,9 @@ void run_program() {
         //
         // NOTA: Se ejecuta una vez cada tick (sin importar los FPS)
         // (20 TPS == 20 actualizaciones por segundo)
-        while (delta::fixedUpdate()) {
+        while (app.window_is_FixedUpdate()) {
             fixed_update_game();
-            delta::feedFixedUpdate();
+            app.window_feed_FixedUpdate();
         }
 
         /// Frame Rate Update
@@ -192,11 +70,13 @@ void run_program() {
     }
 }
 
-void update_game() {
-    camera.inputs();
-    camera.updateMatrix();
+static float test_rotation{0.0f};
 
-    test_rotation += delta::dt * 60.0f;
+void update_game() {
+    app.camera_inputs();
+    app.camera_update_Matrix();
+
+    test_rotation += app.dt * 60.0f;
     test_rotation = (test_rotation < 360.0f) ? test_rotation : 0.0f;
 }
 
@@ -214,12 +94,10 @@ void render_game() {
     //renderSword(test_rotation);
     renderer(test_rotation);
 
-    glfwSwapBuffers(window::glfw);
+    glfwSwapBuffers(app.glfw);
     glfwPollEvents();
 }
 
 void shut_down() {
     glfwTerminate();
-    if (window::name)
-        delete[] window::name;
 }

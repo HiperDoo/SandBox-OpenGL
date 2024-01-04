@@ -97,8 +97,8 @@ void Mesh<T>::setLight(const glm::vec3& lightColor, const glm::vec3& lightPos) {
 template <int T>
 void Mesh<T>::render() const {
     shader.setUniformMat4f(u_model, matrix);
-    shader.setUniformVec3f(u_cameraPos, camera.position);
-    shader.setUniformMat4f(u_camera, camera.matrix);
+    shader.setUniformVec3f(u_cameraPos, app.position);
+    shader.setUniformMat4f(u_camera, app.matrix);
 
     shader.bind();
     if (T == 1)         diffuse.bind(0);

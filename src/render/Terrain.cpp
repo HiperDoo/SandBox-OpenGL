@@ -79,6 +79,7 @@ Terrain::~Terrain() {
     if (height_map_2D) delete[] height_map_2D;
 }
 
+//=====>>> Funciones
 void Terrain::read_file_terrain(const char* file_path) {
     // Cargar terreno del archivo.
     size_t size = general_buff.load_from_file(file_path);
@@ -144,7 +145,7 @@ void Terrain::fill_map_terrain(const uint32_t min_height, const uint32_t max_hei
 }
 
 void Terrain::render() const {
-    shader.setUniformMat4f(u_camera, camera.matrix);
+    shader.setUniformMat4f(u_camera, app.matrix);
     shader.bind();
     object.render();
 }

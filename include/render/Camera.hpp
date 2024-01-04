@@ -1,10 +1,12 @@
 #pragma once
 #include "Global.hpp"
+#include "Window.hpp"
 #include "Shader.hpp"
 
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 2000.0f
 
+class WindowManager;
 class Camera {
 private:
     glm::vec3 worldUp;

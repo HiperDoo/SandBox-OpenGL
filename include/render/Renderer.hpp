@@ -2,8 +2,6 @@
 #include "Resources.hpp"
 #include "Camera.hpp"
 
-extern Camera camera;
-
 /*extern void renderSkyBox();
 
 extern void renderCppImg();

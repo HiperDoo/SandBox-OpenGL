@@ -1,7 +1,5 @@
 #include "Renderer.hpp"
 
-Camera camera(glm::vec3(0.0f, 0.0f, 2.0f), 45.0f);
-
 /*void renderSkyBox() {
     glm::mat4 view = glm::mat4(glm::mat3(camera.view));
 
@@ -62,11 +60,11 @@ void renderSword(const float rotation) {
 
 void renderer(const float rotation) {
     ////////// Sky Box
-    glm::mat4 view = glm::mat4(glm::mat3(camera.view));
+    glm::mat4 view = glm::mat4(glm::mat3(app.view));
     skybox.texture.bind();
     skybox.shader.bind();
     skybox.shader.setUniformMat4f(skybox.u_view, view);
-    skybox.shader.setUniformMat4f(skybox.u_projection, camera.projection);
+    skybox.shader.setUniformMat4f(skybox.u_projection, app.projection);
     glDepthFunc(GL_LEQUAL);
     skybox.vertexObj.render();
     glDepthFunc(GL_LESS);
@@ -75,7 +73,7 @@ void renderer(const float rotation) {
     ////////// Cpp Image
     cpp_img.texture.bind();
     cpp_img.shader.bind();
-    cpp_img.shader.setUniformMat4f(cpp_img.u_camera, camera.matrix);
+    cpp_img.shader.setUniformMat4f(cpp_img.u_camera, app.matrix);
     glEnable(GL_BLEND);
     cpp_img.vertexObj.render();
     glDisable(GL_BLEND);
@@ -84,14 +82,14 @@ void renderer(const float rotation) {
     ////////// Piramid
     piramid.texture.bind();
     piramid.shader.bind();
-    piramid.shader.setUniformMat4f(piramid.u_camera, camera.matrix);
-    piramid.shader.setUniformVec3f(piramid.u_cameraPos, camera.position);
+    piramid.shader.setUniformMat4f(piramid.u_camera, app.matrix);
+    piramid.shader.setUniformVec3f(piramid.u_cameraPos, app.position);
     piramid.vertexObj.render();
 
 
     ////////// Floor
-    w_floor.shader.setUniformVec3f(w_floor.u_cameraPos, camera.position);
-    w_floor.shader.setUniformMat4f(w_floor.u_camera, camera.matrix);
+    w_floor.shader.setUniformVec3f(w_floor.u_cameraPos, app.position);
+    w_floor.shader.setUniformMat4f(w_floor.u_camera, app.matrix);
     w_floor.shader.bind();
     w_floor.texture.bind(0);
     w_floor.specular.bind(1);
@@ -99,7 +97,7 @@ void renderer(const float rotation) {
 
 
     ////////// Light
-    light.shader.setUniformMat4f(light.u_camera, camera.matrix);
+    light.shader.setUniformMat4f(light.u_camera, app.matrix);
     light.shader.bind();
     light.vertexObj.render();
 

@@ -1,19 +1,6 @@
 #include "Global.hpp"
 
-//===============================
-// INICIALIZAR VARIABLES GLOBALES
-//===============================
-namespace window {
-    GLFWwindow* glfw{nullptr};
-    char* name{nullptr};
-
-    uint32_t width{720};
-    uint32_t height{480};
-    float half_width{width / 2.0f};
-    float half_height{height / 2.0f};
-};
-
-namespace delta {
+/*namespace delta {
     double FPS{60.0f};
     double target_frame_time{1.0f / FPS};
     double elapsed_game_time{0.0f};
@@ -63,7 +50,7 @@ namespace delta {
         if (sleep_time > 0.0f)
             std::this_thread::sleep_for(std::chrono::duration<double>(sleep_time));
     }
-};
+};*/
 
 namespace mouse {
     int32_t offsetX{0};
@@ -78,6 +65,8 @@ namespace mouse {
 
     bool first_move{true};
 };
+
+WindowManager app;
 
 io::Shader_Buffer shader_buff;
 io::General_Buffer vertex_buff;

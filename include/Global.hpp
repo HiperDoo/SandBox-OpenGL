@@ -12,24 +12,25 @@
 #include <chrono>
 #include <thread>
 
+#define OPENGL_VERSION_MAJOR 4
+#define OPENGL_VERSION_MINOR 5
+
+#define MAX_TITLE_SZIE 32
+#define GAME_TICKS_PER_SECOND 20
+#define FIXED_TIME_UPDATE (1.0f / GAME_TICKS_PER_SECOND)
+
+#define NEAR_PLANE 0.1f
+#define FAR_PLANE 2000.0f
+
 #include "LogManager.hpp"
 #include "FileManager.hpp"
 #include "Hardware.hpp"
 
-#define OPENGL_VERSION_MAJOR 4
-#define OPENGL_VERSION_MINOR 5
+#include "Window.hpp"
+class WindowManager;
+extern WindowManager app;
 
-namespace window {
-    extern GLFWwindow* glfw;
-    extern char* name;
-
-    extern uint32_t width;
-    extern uint32_t height;
-    extern float half_width;
-    extern float half_height;
-};
-
-namespace delta {
+/*namespace delta {
     extern double FPS;
     extern double target_frame_time;
     extern double elapsed_game_time;
@@ -66,7 +67,7 @@ namespace delta {
 
     inline bool fixedUpdate() { return lag_elapsed >= (1.0f / 20.0f); } //target_frame_time
     inline void feedFixedUpdate() { lag_elapsed -= (1.0f / 20.0f); } //target_frame_time
-};
+};*/
 
 namespace ms {
     struct Timer {
