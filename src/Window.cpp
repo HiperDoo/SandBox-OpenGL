@@ -8,7 +8,7 @@ WindowManager::WindowManager() :
     // ===========================================
     now_clk(0.0f), last_clk(0.0f), lag_elapsed(0.0f),
     title_fps_timer(0.0f), fps_counter(0), dt(0.0f),
-    
+
     // Variables para la ventana de OpenGL
     // ===================================
     glfw(nullptr), title{0}, title_size(0), width(0), height(0),
@@ -156,7 +156,7 @@ void WindowManager::camera_inputs() {
 
         yaw = yaw > 360.0f ? 0.0f : yaw;
         yaw = yaw < 0.0f ? 360.0f : yaw;
-        
+
         front.x = cos(radians(yaw)) * cos(radians(pitch));
         front.y = sin(radians(pitch));
         front.z = sin(radians(yaw)) * cos(radians(pitch));

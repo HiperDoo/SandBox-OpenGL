@@ -1,17 +1,27 @@
 echo >/dev/null # >nul & GOTO WINDOWS & rem ^
 
-if [ "$1" == "setup" ]; then
-    (cd dep/glfw/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
-    (cd dep/glew/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
-    (cd dep/fmt/; mkdir build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make)
+set -e 
+set -o pipefail
 
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
+cores=$(nproc)
+if [ "$cores" -gt 5 ]; then
+    ((cores -= 2))
+fi
+
+if [ "$1" == "setup" ]; then
+    (cd dep/glfw/; mkdir -p build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF; make -j$cores)
+    (cd dep/glew/; mkdir -p build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF; make -j$cores)
+    (cd dep/fmt/;  mkdir -p build; cd build; cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DFMT_TEST=OFF; make -j$cores)
+
+    (mkdir -p build/debug;   cd build/debug;   cmake ../../ -DCMAKE_BUILD_TYPE=Debug)
+    (mkdir -p build/release; cd build/release; cmake ../../ -DCMAKE_BUILD_TYPE=Release)
+
 elif [ "$1" == "build" ]; then
-    (cd build/; make -j4)
+    (cd build/release/; make -j$cores)
+
 elif [ "$1" == "run" ]; then
     (cd Release/; ./Release.app)
+
 else
     echo "Error '$1': solo se reconocen tres posibles inputs..."
     echo " > ./sh.bat setup"
@@ -27,6 +37,9 @@ cls
 
 set "rootdir=%CD%"
 
+set cores=%NUMBER_OF_PROCESSORS%
+if %cores% GTR 5 set /a "cores=%cores%-2"
+
 if "%1" == "" (
     set flag=1==1
     set /p input="Ingrese la accion a realizar... ej. (setup, build o run): "
@@ -36,47 +49,31 @@ if "%1" == "" (
 )
 
 if "%input%" == "setup" (
-    if exist "%rootdir%\dep\glfw" ( cd %rootdir%\dep\glfw
-    ) else ( echo El directorio `%rootdir%\dep\glfw` no existe. )
-    mkdir build 2>nul
-    cd build
-    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
-    call mingw32-make -j4
-    echo ============================
-    echo ===== GLFW CONFIGURADO =====
-    echo ============================
+    (cd %rootdir%\dep\glfw && mkdir build 2>nul && cd build) || exit /b 1
+    (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOC=OFF) || exit /b 1
+    (call mingw32-make -j%cores%) || exit /b 1
 
-    if exist "%rootdir%\dep\glew" ( cd %rootdir%\dep\glew
-    ) else ( echo El directorio `%rootdir%\dep\glew` no existe. )
-    mkdir build 2>nul
-    cd build
-    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
-    call mingw32-make -j4
-    echo ============================
-    echo ===== GLEW CONFIGURADO =====
-    echo ============================
+    (cd %rootdir%\dep\glew && mkdir build 2>nul && cd build) || exit /b 1
+    (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF) || exit /b 1
+    (call mingw32-make -j%cores%) || exit /b 1
 
-    if exist "%rootdir%\dep\fmt" ( cd %rootdir%\dep\fmt
-    ) else ( echo El directorio `%rootdir%\dep\fmt` no existe. )
-    mkdir build 2>nul
-    cd build
-    call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF
-    call mingw32-make -j4
-    echo ===========================
-    echo ===== FMT CONFIGURADO =====
-    echo ===========================
+    (cd %rootdir%\dep\glew && mkdir build 2>nul && cd build) || exit /b 1
+    (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DFMT_TEST=OFF) || exit /b 1
+    (call mingw32-make -j%cores%) || exit /b 1
 
-    cd %rootdir%
-    mkdir build 2>nul
-    cd build
-    call cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+    (cd %rootdir% && mkdir build 2>nul && cd build) || exit /b 1
+    (mkdir debug 2>nul && cd debug && call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug) || exit /b 1
+    (cd %rootdir%\build) || exit /b 1
+    (mkdir release 2>nul && cd release && call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release) || exit /b 1
+
 ) else if "%input%" == "build" (
-    cd build
-    call mingw32-make -j4
+    (cd build/release/ && call mingw32-make -j%cores%) || exit /b 1
+
 ) else if "%input%" == "run" (
     cd Release
     call Release.exe
     exit
+
 ) else (
     echo "Error '%input%': solo se reconocen tres posibles inputs (setup, build, run)..."
 )
