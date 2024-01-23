@@ -8,7 +8,6 @@ SET(CMAKE_PROJECT_VERSION   0.0.1)
 SET(CMAKE_CXX_STANDARD      17)
 
 # === Nombre del Ejecutable
-message(${CMAKE_BUILD_TYPE})
 IF(NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "Release")
     SET(CMAKE_BUILD_TYPE Release)
     SET(EXECUTABLE_NAME     "Release")  # Nombre para el modo exe Release Mode
