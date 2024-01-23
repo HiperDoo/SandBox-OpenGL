@@ -49,22 +49,29 @@ if "%1" == "" (
 )
 
 if "%input%" == "setup" (
-    (cd %rootdir%\dep\glfw && mkdir build 2>nul && cd build) || exit /b 1
-    (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOC=OFF) || exit /b 1
+    (cd %rootdir%\dep\glfw) || exit /b 1
+    (cd build 2> NUL || (mkdir build & cd build)) || exit /b 1
+    (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF) || exit /b 1
     (call mingw32-make -j%cores%) || exit /b 1
 
-    (cd %rootdir%\dep\glew && mkdir build 2>nul && cd build) || exit /b 1
+    (cd %rootdir%\dep\glew) || exit /b 1
+    (cd build 2> NUL || (mkdir build & cd build)) || exit /b 1
     (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF) || exit /b 1
     (call mingw32-make -j%cores%) || exit /b 1
 
-    (cd %rootdir%\dep\glew && mkdir build 2>nul && cd build) || exit /b 1
+    (cd %rootdir%\dep\fmt) || exit /b 1
+    (cd build 2> NUL || (mkdir build & cd build)) || exit /b 1
     (call cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DFMT_TEST=OFF) || exit /b 1
     (call mingw32-make -j%cores%) || exit /b 1
 
-    (cd %rootdir% && mkdir build 2>nul && cd build) || exit /b 1
-    (mkdir debug 2>nul && cd debug && call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug) || exit /b 1
-    (cd %rootdir%\build) || exit /b 1
-    (mkdir release 2>nul && cd release && call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release) || exit /b 1
+    cd %rootdir%
+    (cd build 2> NUL || (mkdir build & cd build)) || exit /b 1
+    (cd debug 2> NUL || (mkdir debug & cd debug)) || exit /b 1
+    (call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug) || exit /b 1
+
+    cd %rootdir%\build
+    (cd release 2> NUL || (mkdir release & cd release)) || exit /b 1
+    (call cmake ../../ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release) || exit /b 1
 
 ) else if "%input%" == "build" (
     (cd build/release/ && call mingw32-make -j%cores%) || exit /b 1
